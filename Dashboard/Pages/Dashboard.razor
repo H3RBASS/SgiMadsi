@@ -1,0 +1,380 @@
+﻿@page "/"
+@using SgiMadsi.Shared.Services
+@inject ProductoService dashServiceProducts
+@layout Navbar
+@namespace SgiMadsi.Dashboard.Pages
+
+<PageTitle>Dashboard</PageTitle>
+
+<div class="min-h-screen w-full bg-gray-50 text-gray-800">
+    <!-- Contenido principal -->
+    <main class="flex-1 p-4 lg:p-6">
+        <!-- Header -->
+        <header class="bg-white rounded-xl shadow-sm p-4 lg:p-6 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-xl lg:text-2xl font-bold text-gray-800">Dashboard de Inventario</h1>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <button @onclick="AbrirModal" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 
+                                   focus:outline-none cursor-pointer transition duration-200 hover:scale-105">
+                        + Nuevo Producto
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Modal -->
+        @if (MostrarModal)
+        {
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50">
+                <!-- Alerta -->
+                @if (AlertaVentana)
+                {
+                    <div class="fixed top-5 right-5 bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg z-50 
+                                flex items-center gap-3 animate-pulse">
+                        <span>⚠️ Rellena todos los campos</span>
+                        <button @onclick="() => AlertaVentana = false" 
+                                class="text-white hover:text-gray-200 text-xl font-bold">
+                            x
+                        </button>
+                    </div>
+                }
+
+                <!-- Ventana Modal -->
+                <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Añadir producto</h3>
+
+                    <EditForm Model="ProductosForm" OnValidSubmit="Guardar" class="flex flex-col gap-4">
+                        <DataAnnotationsValidator />
+
+                        <span>Nombre</span>
+                        <InputText @bind-Value="ProductosForm.Nombre"
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <ValidationMessage For="() => ProductosForm.Nombre" />
+
+                        <span>Precio (Bs)</span>
+                        <InputNumber @bind-Value="ProductosForm.Precio" min="0" step="0.01"
+                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <ValidationMessage For="() => ProductosForm.Precio" />
+
+                        <span>Stock <span class="text-gray-500 text-sm lg:text-base mt-1">(opcional)</span></span>
+                        <InputNumber @bind-Value="ProductosForm.Cantidad" min="0" step="1" inputmode="numeric"
+                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <ValidationMessage For="() => ProductosForm.Cantidad" />
+
+                        <span>Categoría</span>
+                        <InputSelect @bind-Value="ProductosForm.Categoria" 
+                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="" disabled selected hidden>Seleccione una categoría</option>
+                            <option value="Aseo Personal">Cuidado Personal</option>
+                            <option value="Cocina">Cocina</option>
+                            <option value="Enlatados">Enlatados</option>
+                            <option value="Limpieza">Limpieza</option>
+                            <option value="Plasticos">Plasticos</option>
+                            <option value="Reposteria">Reposteria</option>
+                            <option value="Abarrotes">Abarrotes</option>
+                        </InputSelect>
+                        <ValidationMessage For="() => ProductosForm.Categoria" />
+
+                        <!-- Botones -->
+                        <div class="flex justify-end gap-3 mt-6">
+                            <button class="px-4 py-2 rounded-lg hover:bg-gray-300 cursor-pointer transition duration-200 hover:scale-105"
+                                    type="button"
+                                    @onclick="CerrarModal">
+                                Cancelar
+                            </button>
+                            <button class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer transition duration-200 hover:scale-105"
+                                    type="submit">
+                                Guardar
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        }
+
+        <!-- Grid de tarjetas KPI -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 mb-6">
+            <!-- Total Stock Value -->
+            <article class="bg-linear-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-4 lg:p-6">
+                <div class="flex justify-between items-start">
+                    <div class="min-w-0">
+                        <p class="text-blue-100 text-sm truncate">Valor Total</p>
+                        <h2 class="text-2xl lg:text-3xl font-bold mt-2 truncate">@dashServiceProducts.GetTotalPrice() Bs</h2>
+                        <p class="text-blue-100 text-sm mt-2">+12.5% vs mes anterior</p>
+                    </div>
+                    <div class="bg-white/20 p-3 rounded-full shrink-0 ml-2">
+                        <span class="text-xl lg:text-2xl" aria-hidden="true">💰</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-sm truncate">Valor promedio por Inventario: Bs @dashServiceProducts.GetAveragePrice()</p>
+                </div>
+            </article>
+
+            <!-- Total Items -->
+            <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6">
+                <div class="flex justify-between items-start">
+                    <div class="min-w-0">
+                        <p class="text-gray-500 text-sm truncate">Productos Totales</p>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate">@dashServiceProducts.CountAllProductos()</h2>
+                        <p class="text-green-600 text-sm font-medium mt-2">+45 productos este mes</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full shrink-0 ml-2">
+                        <span class="text-xl lg:text-2xl text-green-600" aria-hidden="true">📦</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <div class="flex items-center">
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 78%"></div>
+                        </div>
+                        <span class="text-sm text-gray-500 ml-2 whitespace-nowrap">78% stock óptimo</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Low Stock Alert -->
+            <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6">
+                <div class="flex justify-between items-start">
+                    <div class="min-w-0">
+                        <p class="text-gray-500 text-sm truncate">Stock Bajo</p>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate"> @dashServiceProducts.GetLowStockCount()</h2>
+                        <p class="text-red-600 text-sm font-medium mt-2">Necesita reabastecimiento</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full shrink-0 ml-2">
+                        <span class="text-xl lg:text-2xl text-red-600" aria-hidden="true">⚠️</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex flex-wrap items-center text-sm gap-1">
+                        <span class="text-gray-500">Producto crítico:</span>
+                        <span class="font-medium truncate">@dashServiceProducts.GetAllProductos().FirstOrDefault(p => p.Cantidad < 10)?.Nombre</span>
+                        <span class="ml-auto text-red-600 font-bold whitespace-nowrap">@dashServiceProducts.GetAllProductos().FirstOrDefault(p => p.Cantidad < 10)?.Cantidad unidades</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Out of Stock -->
+            <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6 xl:col-span-1">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="min-w-0">
+                        <p class="text-gray-500 text-sm truncate">Agotados</p>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate">@dashServiceProducts.GetOutStockCount()</h2>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full shrink-0 ml-2">
+                        <span class="text-xl lg:text-2xl text-orange-600" aria-hidden="true">🛑</span>
+                    </div>
+                </div>
+
+                <!-- Lista de productos agotados -->
+                <div class="flex-1 overflow-y-auto" style="max-height: 370px;">
+                    <table class="w-full table-auto">
+                        <thead class="sticky top-0 bg-white z-10 shadow-sm">
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/3">Producto</th>
+                                <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/5">Stock</th>
+                                @*VENTAS <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/6">Ventas</th> *@
+                                <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/6">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{var PProductos = dashServiceProducts.GetOutStockProductos();
+                            }
+                            @if (PProductos != null && PProductos.Any())
+                            {
+                                @foreach (var producto in PProductos)
+                                {
+                                    <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150">
+                                        <td class="py-3">
+                                            <div class="flex items-center min-w-0">
+                                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
+                                                    <span class="text-blue-600 text-xs font-bold">P</span>
+                                                </div>
+                                                <span class="truncate">@producto.Nombre</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-3">
+                                            <div class="flex items-center">
+                                                <div class="w-4 bg-gray-200 rounded-full h-2 mr-2">
+                                                    @{
+                                                        var porcentaje = Math.Min(producto.Cantidad, 100);
+                                                        var color = producto.Cantidad > 10 ? "bg-green-500" :
+                                                                    (producto.Cantidad >= 5 ? "bg-yellow-500" : "bg-red-500");
+                                                    }
+                                                    <div class="@color h-2 rounded-full" style="width: 100%; max-width: 100%"></div>
+                                                </div>
+                                                <span class="text-sm whitespace-nowrap">@producto.Cantidad</span>
+                                            </div>
+                                        </td>
+
+                                        @*VENTAS <td class="py-3 font-bold text-sm">148</td>*@
+
+                                        <td class="py-3">
+                                            @if (producto.Cantidad > 10)
+                                            {
+                                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Óptimo</span>
+                                            }
+                                            else if (producto.Cantidad >= 5)
+                                            {
+                                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Bajo</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Crítico</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="py-6 text-center text-gray-500">
+                                        No hay productos disponibles.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </section>
+
+        <!-- Sección de gráfico y tabla -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Stock Movement Chart -->
+            <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6">
+                <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800">Movimiento de Stock (30 días)</h3>
+                    <select 
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option>Últimos 30 días</option>
+                        <option>Últimos 90 días</option>
+                        <option>Este año</option>
+                    </select>
+                </header>
+                
+                <div class="h-48 lg:h-64 flex items-end gap-1 lg:gap-2 mt-4 lg:mt-8 px-2">
+                    @{
+                        var heights = new int[] { 80, 65, 90, 45, 70, 95, 60 };
+                        var days = new string[] { "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom" };
+                        for (int i = 0; i < heights.Length; i++)
+                        {
+                            var height = heights[i];
+                            var day = days[i];
+                            var bgColor = i == 5 ? "#10b981" : "#3b82f6";
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="w-3/4 lg:w-4/5 rounded-t-lg transition-all duration-300 hover:opacity-90"
+                                     style="height: @(height)%; background-color: @bgColor">
+                                </div>
+                                <span class="text-xs text-gray-500 mt-2">@day</span>
+                            </div>
+                        }
+                    }
+                </div>
+                
+                <footer class="mt-4 lg:mt-6 pt-4 border-t border-gray-100">
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="text-sm text-gray-500">Entradas</p>
+                            <p class="font-bold text-lg">324</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Salidas</p>
+                            <p class="font-bold text-lg">287</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Balance</p>
+                            <p class="font-bold text-lg text-green-600">+37</p>
+                        </div>
+                    </div>
+                </footer>
+            </article>
+
+            <!-- Top Products (Tabla) -->
+            
+    <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6 flex flex-col">
+    <header class="mb-4 lg:mb-6">
+        <h3 class="text-lg font-bold text-gray-800">Productos</h3>
+    </header>
+    
+    <!-- Contenedor con scroll solo si es necesario -->
+    <div class="flex-1 overflow-y-auto" style="max-height: 370px;">
+        <table class="w-full table-auto">
+            <thead class="sticky top-0 bg-white z-10 shadow-sm">
+                <tr class="border-b border-gray-200">
+                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/3">Producto</th>
+                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/4">Categoría</th>
+                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/5">Stock</th>
+                    @*VENTAS <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/6">Ventas</th> *@
+                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/6">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var productos = dashServiceProducts.GetAllProductos();
+                            }
+                @if (productos != null && productos.Any())
+                {
+                    @foreach (var producto in productos)
+                    {
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150">
+                            <td class="py-3">
+                                <div class="flex items-center min-w-0">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
+                                        <span class="text-blue-600 text-xs font-bold">P</span>
+                                    </div>
+                                    <span class="truncate">@producto.Nombre</span>
+                                </div>
+                            </td>
+                            <td class="py-3 text-sm truncate">@producto.Categoria</td>
+                            <td class="py-3">
+                                <div class="flex items-center">
+                                    <div class="w-4 bg-gray-200 rounded-full h-2 mr-2">
+                                        @{
+                                            var porcentaje = Math.Min(producto.Cantidad, 100);
+                                            var color = producto.Cantidad > 10 ? "bg-green-500" :
+                                                        (producto.Cantidad >= 5 ? "bg-yellow-500" : "bg-red-500");
+                                        }
+                                        <div class="@color h-2 rounded-full" style="width: 100%; max-width: 100%"></div>
+                                    </div>
+                                    <span class="text-sm whitespace-nowrap">@producto.Cantidad</span>
+                                </div>
+                            </td>
+
+                            @*VENTAS <td class="py-3 font-bold text-sm">148</td>*@
+
+                            <td class="py-3">
+                                @if (producto.Cantidad > 10)
+                                {
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Óptimo</span>
+                                }
+                                else if (producto.Cantidad >= 5)
+                                {
+                                    <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Bajo</span>
+                                }
+                                else
+                                {
+                                    <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Crítico</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="py-6 text-center text-gray-500">
+                            No hay productos disponibles.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</article>
+        </section>
+    </main>
+</div>
