@@ -5,12 +5,14 @@ using SgiMadsi.Dashboard.Services;
 using SgiMadsi.Shared.Services;
 using SgiMadsi.Shared.Configuration;
 using Supabase;
-using Supabase.Interfaces;
+using SgiMadsi.Shared.Interfaces;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddSingleton<IProductoServices, ProductoService>();
 
 //conexion a supabase
 
@@ -26,6 +28,8 @@ var client = new Client(
 await client.InitializeAsync();
 
 builder.Services.AddSingleton(client);
+
+
 
 //fin conexion a supabase
 

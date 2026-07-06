@@ -1,9 +1,30 @@
 using SgiMadsi.Shared.Domain;
+using SgiMadsi.Shared.Interfaces;
+using Supabase;
 
 namespace SgiMadsi.Shared.Services
 {
-    public class ProductoService
+    public class ProductoService : IProductoServices
     {
+        private readonly Client _client;
+
+        public ProductoService(Client client)
+        {
+            _client = client;
+        }
+
+        public async Task<List<Producto>> ObtenerProductosAsync()
+        {
+            var response = await _client
+            .From<Producto>()
+            .Get();
+
+            return response.Models;
+        }
+
+ 
+
+        /*
         private List<Producto> ListaProductos = new List<Producto>
         {
             new Producto { Id = 1, Nombre = "Producto A", Categoria = "Categoría 1", Precio = 10.5m, Cantidad = 5 },
@@ -61,6 +82,7 @@ namespace SgiMadsi.Shared.Services
         }
 
         public void CrearProducto(string nombre, string categoria, decimal precio, int cantidad)
+
         {
             Producto nuevoProducto = new Producto
             {
@@ -72,5 +94,7 @@ namespace SgiMadsi.Shared.Services
 
             AddProducto(nuevoProducto);
         }
+
+        */
     }
 }
