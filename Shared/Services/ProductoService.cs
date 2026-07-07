@@ -22,8 +22,6 @@ namespace SgiMadsi.Shared.Services
             return response.Models;
         }
 
- 
-
         /*
         private List<Producto> ListaProductos = new List<Producto>
         {

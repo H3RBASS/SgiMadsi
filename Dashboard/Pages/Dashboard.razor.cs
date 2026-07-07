@@ -13,7 +13,7 @@ public partial class Dashboard
     private IProductoServices ProductoServices { get; set; } = default!;
 
     //lista donde se guardaran los productos obtenidos del servicio
-    private List<Producto> _productos = new();
+    private List<Producto> _productos = new();  
 
     //metodo que se ejecuta al inicializar el componente
     protected override async Task OnInitializedAsync()
@@ -25,12 +25,6 @@ public partial class Dashboard
 
     private List<Producto> ProductosBajoStock =>
         _productos.Where(p => p.Stock > 0 && p.Stock <= 10).ToList();
-
-
-
-    // Inyectamos el servicio de productos
-    [Inject]
-    private ProductoService servicioProductos { get; set; } = default!;
 
     //variable para controlar la visibilidad del modal
     public bool MostrarModal { get; set; }
