@@ -24,7 +24,7 @@
                 </div>
             </div>
         </header>
-
+@* 
         <!-- Modal -->
         @if (MostrarModal)
         {
@@ -93,7 +93,7 @@
                     </EditForm>
                 </div>
             </div>
-        }
+        } *@
 
         <!-- Grid de tarjetas KPI -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 mb-6">
@@ -102,7 +102,7 @@
                 <div class="flex justify-between items-start">
                     <div class="min-w-0">
                         <p class="text-blue-100 text-sm truncate">Valor Total</p>
-                        <h2 class="text-2xl lg:text-3xl font-bold mt-2 truncate">@dashServiceProducts.GetTotalPrice() Bs</h2>
+                        <h2 class="text-2xl lg:text-3xl font-bold mt-2 truncate">@_productos.Sum(p => p.PrecioVenta * p.Stock) Bs</h2>
                         <p class="text-blue-100 text-sm mt-2">+12.5% vs mes anterior</p>
                     </div>
                     <div class="bg-white/20 p-3 rounded-full shrink-0 ml-2">
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <div class="mt-4 pt-4 border-t border-white/20">
-                    <p class="text-sm truncate">Valor promedio por Inventario: Bs @dashServiceProducts.GetAveragePrice()</p>
+                    <p class="text-sm truncate">Valor promedio por Inventario: Bs @_productos.Count()</p>
                 </div>
             </article>
 
@@ -119,7 +119,7 @@
                 <div class="flex justify-between items-start">
                     <div class="min-w-0">
                         <p class="text-gray-500 text-sm truncate">Productos Totales</p>
-                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate">@dashServiceProducts.CountAllProductos()</h2>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate">@_productos.Count()</h2>
                         <p class="text-green-600 text-sm font-medium mt-2">+45 productos este mes</p>
                     </div>
                     <div class="bg-green-100 p-3 rounded-full shrink-0 ml-2">
@@ -141,7 +141,7 @@
                 <div class="flex justify-between items-start">
                     <div class="min-w-0">
                         <p class="text-gray-500 text-sm truncate">Stock Bajo</p>
-                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate"> @dashServiceProducts.GetLowStockCount()</h2>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate"> @ProductosBajoStock.Count()</h2>
                         <p class="text-red-600 text-sm font-medium mt-2">Necesita reabastecimiento</p>
                     </div>
                     <div class="bg-red-100 p-3 rounded-full shrink-0 ml-2">
@@ -151,8 +151,8 @@
                 <div class="mt-4">
                     <div class="flex flex-wrap items-center text-sm gap-1">
                         <span class="text-gray-500">Producto crítico:</span>
-                        <span class="font-medium truncate">@dashServiceProducts.GetAllProductos().FirstOrDefault(p => p.Cantidad < 10)?.Nombre</span>
-                        <span class="ml-auto text-red-600 font-bold whitespace-nowrap">@dashServiceProducts.GetAllProductos().FirstOrDefault(p => p.Cantidad < 10)?.Cantidad unidades</span>
+                        <span class="font-medium truncate">@ProductosBajoStock.FirstOrDefault()?.Nombre</span>
+                        <span class="ml-auto text-red-600 font-bold whitespace-nowrap">@ProductosBajoStock.FirstOrDefault()?.Stock unidades</span>
                     </div>
                 </div>
             </article>
@@ -162,7 +162,7 @@
                 <div class="flex justify-between items-start mb-4">
                     <div class="min-w-0">
                         <p class="text-gray-500 text-sm truncate">Agotados</p>
-                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate">@dashServiceProducts.GetOutStockCount()</h2>
+                        <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate">@ProductosFueraStock.Count()</h2>
                     </div>
                     <div class="bg-orange-100 p-3 rounded-full shrink-0 ml-2">
                         <span class="text-xl lg:text-2xl text-orange-600" aria-hidden="true">🛑</span>
@@ -181,11 +181,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @{var PProductos = dashServiceProducts.GetOutStockProductos();
-                            }
-                            @if (PProductos != null && PProductos.Any())
+                            @if (ProductosFueraStock != null && ProductosFueraStock.Any())
                             {
-                                @foreach (var producto in PProductos)
+                                @foreach (var producto in ProductosFueraStock)
                                 {
                                     <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150">
                                         <td class="py-3">
@@ -200,24 +198,24 @@
                                             <div class="flex items-center">
                                                 <div class="w-4 bg-gray-200 rounded-full h-2 mr-2">
                                                     @{
-                                                        var porcentaje = Math.Min(producto.Cantidad, 100);
-                                                        var color = producto.Cantidad > 10 ? "bg-green-500" :
-                                                                    (producto.Cantidad >= 5 ? "bg-yellow-500" : "bg-red-500");
+                                                        var porcentaje = Math.Min(producto.Stock, 100);
+                                                        var color = producto.Stock > 10 ? "bg-green-500" :
+                                                                    (producto.Stock >= 5 ? "bg-yellow-500" : "bg-red-500");
                                                     }
                                                     <div class="@color h-2 rounded-full" style="width: 100%; max-width: 100%"></div>
                                                 </div>
-                                                <span class="text-sm whitespace-nowrap">@producto.Cantidad</span>
+                                                <span class="text-sm whitespace-nowrap">@producto.Stock</span>
                                             </div>
                                         </td>
 
                                         @*VENTAS <td class="py-3 font-bold text-sm">148</td>*@
 
                                         <td class="py-3">
-                                            @if (producto.Cantidad > 10)
+                                            @if (producto.Stock > 10)
                                             {
                                                 <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Óptimo</span>
                                             }
-                                            else if (producto.Cantidad >= 5)
+                                            else if (producto.Stock >= 5)
                                             {
                                                 <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Bajo</span>
                                             }
@@ -306,6 +304,10 @@
         <table class="w-full table-auto">
             <thead class="sticky top-0 bg-white z-10 shadow-sm">
                 <tr class="border-b border-gray-200">
+                    @* Producto, 
+                    Categoría, 
+                    Stock, 
+                    Estado *@
                     <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/3">Producto</th>
                     <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/4">Categoría</th>
                     <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/5">Stock</th>
@@ -314,11 +316,9 @@
                 </tr>
             </thead>
             <tbody>
-                @{var productos = dashServiceProducts.GetAllProductos();
-                            }
-                @if (productos != null && productos.Any())
+                @if (_productos != null && _productos.Any())
                 {
-                    @foreach (var producto in productos)
+                    @foreach (var producto in _productos)
                     {
                         <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150">
                             <td class="py-3">
@@ -334,24 +334,24 @@
                                 <div class="flex items-center">
                                     <div class="w-4 bg-gray-200 rounded-full h-2 mr-2">
                                         @{
-                                            var porcentaje = Math.Min(producto.Cantidad, 100);
-                                            var color = producto.Cantidad > 10 ? "bg-green-500" :
-                                                        (producto.Cantidad >= 5 ? "bg-yellow-500" : "bg-red-500");
+                                            var porcentaje = Math.Min(producto.Stock, 100);
+                                            var color = producto.Stock > 10 ? "bg-green-500" :
+                                                        (producto.Stock >= 5 ? "bg-yellow-500" : "bg-red-500");
                                         }
                                         <div class="@color h-2 rounded-full" style="width: 100%; max-width: 100%"></div>
                                     </div>
-                                    <span class="text-sm whitespace-nowrap">@producto.Cantidad</span>
+                                    <span class="text-sm whitespace-nowrap">@producto.Stock</span>
                                 </div>
                             </td>
 
                             @*VENTAS <td class="py-3 font-bold text-sm">148</td>*@
 
                             <td class="py-3">
-                                @if (producto.Cantidad > 10)
+                                @if (producto.Stock > 10)
                                 {
                                     <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Óptimo</span>
                                 }
-                                else if (producto.Cantidad >= 5)
+                                else if (producto.Stock >= 5)
                                 {
                                     <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Bajo</span>
                                 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SgiMadsi.Shared.Domain;
 
         // Clase Producto
-        public class Producto
+        public class ProductoLocal
         {
             public int Id { get; set; }
 
