@@ -33,7 +33,11 @@ jobs:
 
       - name: Restaurar paquetes
         run: dotnet restore
-
+        
+      - name: Configurar base href para GitHub Pages
+        run: |
+            sed -i 's|<base href="/" />|<base href="/SgiMadsi/" />|' wwwroot/index.html
+            
       - name: Publicar aplicación
         run: dotnet publish -c Release -o publish
 
