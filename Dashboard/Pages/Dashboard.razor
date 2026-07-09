@@ -96,7 +96,7 @@
         } *@
 
         <!-- Grid de tarjetas KPI -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 mb-6">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-6">
             <!-- Total Stock Value -->
             <article class="bg-linear-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-4 lg:p-6">
                 <div class="flex justify-between items-start">
@@ -156,7 +156,59 @@
                     </div>
                 </div>
             </article>
+        </section>
 
+        <!-- Sección de gráfico y tabla -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Stock Movement Chart -->
+            <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6">
+                <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800">Movimiento de Stock (30 días)</h3>
+                    <select 
+                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option>Últimos 30 días</option>
+                        <option>Últimos 90 días</option>
+                        <option>Este año</option>
+                    </select>
+                </header>
+                
+                <div class="h-48 lg:h-64 flex items-end gap-1 lg:gap-2 mt-4 lg:mt-8 px-2">
+                    @{
+                        var heights = new int[] { 80, 65, 90, 45, 70, 95, 60 };
+                        var days = new string[] { "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom" };
+                        for (int i = 0; i < heights.Length; i++)
+                        {
+                            var height = heights[i];
+                            var day = days[i];
+                            var bgColor = i == 5 ? "#10b981" : "#3b82f6";
+                            <div class="flex-1 flex flex-col items-center">
+                                <div class="w-3/4 lg:w-4/5 rounded-t-lg transition-all duration-300 hover:opacity-90"
+                                     style="height: @(height)%; background-color: @bgColor">
+                                </div>
+                                <span class="text-xs text-gray-500 mt-2">@day</span>
+                            </div>
+                        }
+                    }
+                </div>
+                
+                <footer class="mt-4 lg:mt-6 pt-4 border-t border-gray-100">
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="text-sm text-gray-500">Entradas</p>
+                            <p class="font-bold text-lg">324</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Salidas</p>
+                            <p class="font-bold text-lg">287</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Balance</p>
+                            <p class="font-bold text-lg text-green-600">+37</p>
+                        </div>
+                    </div>
+                </footer>
+            </article>
+            
             <!-- Out of Stock -->
             <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6 xl:col-span-1">
                 <div class="flex justify-between items-start mb-4">
@@ -239,142 +291,7 @@
                     </table>
                 </div>
             </article>
-        </section>
-
-        <!-- Sección de gráfico y tabla -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Stock Movement Chart -->
-            <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6">
-                <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <h3 class="text-lg font-bold text-gray-800">Movimiento de Stock (30 días)</h3>
-                    <select 
-                        class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>Últimos 30 días</option>
-                        <option>Últimos 90 días</option>
-                        <option>Este año</option>
-                    </select>
-                </header>
-                
-                <div class="h-48 lg:h-64 flex items-end gap-1 lg:gap-2 mt-4 lg:mt-8 px-2">
-                    @{
-                        var heights = new int[] { 80, 65, 90, 45, 70, 95, 60 };
-                        var days = new string[] { "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom" };
-                        for (int i = 0; i < heights.Length; i++)
-                        {
-                            var height = heights[i];
-                            var day = days[i];
-                            var bgColor = i == 5 ? "#10b981" : "#3b82f6";
-                            <div class="flex-1 flex flex-col items-center">
-                                <div class="w-3/4 lg:w-4/5 rounded-t-lg transition-all duration-300 hover:opacity-90"
-                                     style="height: @(height)%; background-color: @bgColor">
-                                </div>
-                                <span class="text-xs text-gray-500 mt-2">@day</span>
-                            </div>
-                        }
-                    }
-                </div>
-                
-                <footer class="mt-4 lg:mt-6 pt-4 border-t border-gray-100">
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                            <p class="text-sm text-gray-500">Entradas</p>
-                            <p class="font-bold text-lg">324</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Salidas</p>
-                            <p class="font-bold text-lg">287</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Balance</p>
-                            <p class="font-bold text-lg text-green-600">+37</p>
-                        </div>
-                    </div>
-                </footer>
-            </article>
-
-            <!-- Top Products (Tabla) -->
             
-    <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6 flex flex-col">
-    <header class="mb-4 lg:mb-6">
-        <h3 class="text-lg font-bold text-gray-800">Productos</h3>
-    </header>
-    
-    <!-- Contenedor con scroll solo si es necesario -->
-    <div class="flex-1 overflow-y-auto" style="max-height: 370px;">
-        <table class="w-full table-auto">
-            <thead class="sticky top-0 bg-white z-10 shadow-sm">
-                <tr class="border-b border-gray-200">
-                    @* Producto, 
-                    Categoría, 
-                    Stock, 
-                    Estado *@
-                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/3">Producto</th>
-                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/4">Categoría</th>
-                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/5">Stock</th>
-                    @*VENTAS <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/6">Ventas</th> *@
-                    <th class="text-left py-3 text-gray-500 font-medium text-sm w-1/6">Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (_productos != null && _productos.Any())
-                {
-                    @foreach (var producto in _productos)
-                    {
-                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150">
-                            <td class="py-3">
-                                <div class="flex items-center min-w-0">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 shrink-0">
-                                        <span class="text-blue-600 text-xs font-bold">P</span>
-                                    </div>
-                                    <span class="truncate">@producto.Nombre</span>
-                                </div>
-                            </td>
-                            <td class="py-3 text-sm truncate">@producto.Categoria</td>
-                            <td class="py-3">
-                                <div class="flex items-center">
-                                    <div class="w-4 bg-gray-200 rounded-full h-2 mr-2">
-                                        @{
-                                            var porcentaje = Math.Min(producto.Stock, 100);
-                                            var color = producto.Stock > 10 ? "bg-green-500" :
-                                                        (producto.Stock >= 5 ? "bg-yellow-500" : "bg-red-500");
-                                        }
-                                        <div class="@color h-2 rounded-full" style="width: 100%; max-width: 100%"></div>
-                                    </div>
-                                    <span class="text-sm whitespace-nowrap">@producto.Stock</span>
-                                </div>
-                            </td>
-
-                            @*VENTAS <td class="py-3 font-bold text-sm">148</td>*@
-
-                            <td class="py-3">
-                                @if (producto.Stock > 10)
-                                {
-                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Óptimo</span>
-                                }
-                                else if (producto.Stock >= 5)
-                                {
-                                    <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Bajo</span>
-                                }
-                                else
-                                {
-                                    <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full whitespace-nowrap">Crítico</span>
-                                }
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="5" class="py-6 text-center text-gray-500">
-                            No hay productos disponibles.
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</article>
         </section>
     </main>
 </div>
