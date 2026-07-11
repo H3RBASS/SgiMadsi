@@ -25,6 +25,7 @@ public partial class Inventario
     protected override async Task OnInitializedAsync()
     {
         _productosOriginales = await ProductoServices.ObtenerProductosAsync();
+        _productosOriginales = _productosOriginales.OrderBy(p => p.Subcategoria).ToList();
         _productosFiltrados = _productosOriginales.ToList();
     }
 private void BuscarProductos()
@@ -58,12 +59,12 @@ private void BuscarProductos()
     {
         if (_productoFiltro)
         {
-            _productosFiltrados = _productosFiltrados.OrderBy(p => p.Nombre).ToList();
+            _productosFiltrados = _productosFiltrados.OrderBy(p => p.Subcategoria).ToList();
             _productoFiltro = false;
         }
         else
         {
-            _productosFiltrados = _productosFiltrados.OrderByDescending(p => p.Nombre).ToList();
+            _productosFiltrados = _productosFiltrados.OrderByDescending(p => p.Subcategoria).ToList();
             _productoFiltro = true;
         }
     }
