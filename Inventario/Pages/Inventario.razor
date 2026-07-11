@@ -51,31 +51,34 @@
                                     </svg>
                                 </button>
                             </th>
-                            <th class="py-3 px-4 text-left">
-                                <button @onclick="OrdenarPrecios" class="flex items-center cursor-pointer font-medium text-gray-700 hover:text-blue-500 focus:outline-none hover:scale-105 transition-transform duration-200">
+                            <th class="py-3 px-4 text-center">
+                                <button @onclick="OrdenarPrecios" 
+                                        class="flex items-center justify-center w-full cursor-pointer font-medium text-gray-700 hover:text-blue-500 focus:outline-none hover:scale-105 transition-transform duration-200">
                                     Precio
                                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                     </svg>
                                 </button>
                             </th>
-                            <th class="py-3 px-4 text-left">
-                                <button @onclick="OrdenarCantidad" class="flex items-center cursor-pointer font-medium text-gray-700 hover:text-blue-500 focus:outline-none hover:scale-105 transition-transform duration-200">
-                                    Cantidad
+                            <th class="py-3 px-4 text-center">
+                                <button @onclick="OrdenarCantidad" 
+                                class="flex items-center justify-center w-full cursor-pointer font-medium text-gray-700 hover:text-blue-500 focus:outline-none hover:scale-105 transition-transform duration-200">
+                                    Stock
                                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                     </svg>
                                 </button>
                             </th>
                             <th class="py-3 px-4 text-left">
-                                <button @onclick="OrdenarCategorias" class="flex items-center cursor-pointer font-medium text-gray-700 hover:text-blue-500 focus:outline-none hover:scale-105 transition-transform duration-200">
+                                <button @onclick="OrdenarCategorias" 
+                                class="flex items-center justify-center w-full cursor-pointer font-medium text-gray-700 hover:text-blue-500 focus:outline-none hover:scale-105 transition-transform duration-200">
                                     Categoría
                                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                     </svg>
                                 </button>
                             </th>
-                            <th class="py-3 px-4 text-left font-medium text-gray-700">Estado</th>
+                            <th class="py-3 px-4 text-center font-medium text-gray-700">Estado</th>
                             <!-- <th class="py-3 px-4 text-left font-medium text-gray-700">Acciones</th> -->
                         </tr>
                     </thead>
@@ -85,11 +88,11 @@
                         @foreach (var producto in _productosFiltrados)
                         {
                             <tr>
-                                <td class="py-3 px-4 text-left font-medium text-gray-700">@producto.Subcategoria @producto.Nombre</td>
-                                <td class="py-3 px-4 text-left font-medium text-gray-700">@producto.PrecioVenta</td>
-                                <td class="py-3 px-4 text-left font-medium text-gray-700">@producto.Stock</td>
-                                <td class="py-3 px-4 text-left font-medium text-gray-700">@producto.Categoria</td>
-                                <td class="py-3 px-4 text-left font-medium text-gray-700"><button>editar</button></td>
+                                <td class="py-3 px-4 text-left font-medium text-gray-700">@producto.Subcategoria @producto.Nombre @producto.Presentacion @producto.Unidad</td>
+                                <td class="py-3 px-4 text-center font-medium text-gray-700">@producto.PrecioVenta</td>
+                                <td class="py-3 px-4 text-center font-medium text-gray-700">@producto.Stock</td>
+                                <td class="py-3 px-4 text-center font-medium text-gray-700">@producto.Categoria</td>
+                                <td class="py-3 px-4 text-center font-medium text-gray-700"><button>editar</button></td>
                             </tr>
                         }
                     </tbody>
