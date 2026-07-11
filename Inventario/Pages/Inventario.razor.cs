@@ -11,23 +11,59 @@ public partial class Inventario
     private bool _productoFiltro { get; set; }
     private bool _categoriaFiltro { get; set; }
     private bool _precioFiltro { get; set; }
+    private string _busqueda = string.Empty;
+
+
+    //lista de productos inventario puede cambiar cuando se hace la busqueda
+    private List<Producto> _productosFiltrados = new();
     
-    private List<Producto> _productos = new();
-    
+    //lista de productos obtenidos del servicio
+    private List<Producto> _productosOriginales = new();
+
+
+    //metodos o funciones    
     protected override async Task OnInitializedAsync()
     {
-        _productos = await ProductoServices.ObtenerProductosAsync();
+        _productosOriginales = await ProductoServices.ObtenerProductosAsync();
+        _productosFiltrados = _productosOriginales.ToList();
     }
+private void BuscarProductos()
+{
+    // Eliminamos los espacios en blanco al inicio y al final de la búsqueda
+    var busqueda = _busqueda.Trim();
+
+    if (string.IsNullOrWhiteSpace(busqueda))
+    {
+        _productosFiltrados = _productosOriginales.ToList();
+        return;
+    }
+    //Separamos la cadena en palabras y buscamos cada palabra en el nombre y la subcategoria del producto
+    var palabrasBusqueda = busqueda.Split(' ',
+        StringSplitOptions.RemoveEmptyEntries);
+
+        _productosFiltrados = _productosOriginales
+        .Where(p =>
+        {
+            var textoBusqueda =
+                 $"{p.Subcategoria} {p.Nombre}";
+                 
+            return palabrasBusqueda.Any(palabra =>
+                 textoBusqueda.Contains(
+                 palabra,
+                 StringComparison.OrdinalIgnoreCase));
+        })
+        .ToList();
+}
     private void OrdenarProductos()
     {
         if (_productoFiltro)
         {
-            _productos = _productos.OrderBy(p => p.Nombre).ToList();
+            _productosFiltrados = _productosFiltrados.OrderBy(p => p.Nombre).ToList();
             _productoFiltro = false;
         }
         else
         {
-            _productos = _productos.OrderByDescending(p => p.Nombre).ToList();
+            _productosFiltrados = _productosFiltrados.OrderByDescending(p => p.Nombre).ToList();
             _productoFiltro = true;
         }
     }
@@ -36,12 +72,12 @@ public partial class Inventario
     {
         if (_categoriaFiltro)
         {
-            _productos = _productos.OrderBy(p => p.Categoria).ToList();
+            _productosFiltrados = _productosFiltrados.OrderBy(p => p.Categoria).ToList();
             _categoriaFiltro = false;
         }
         else
         {
-            _productos = _productos.OrderByDescending(p => p.Categoria).ToList();
+            _productosFiltrados = _productosFiltrados.OrderByDescending(p => p.Categoria).ToList();
             _categoriaFiltro = true;
         }
     }
@@ -50,12 +86,12 @@ public partial class Inventario
     {
         if (_precioFiltro)
         {
-            _productos = _productos.OrderBy(p => p.PrecioVenta).ToList();
+            _productosFiltrados = _productosFiltrados.OrderBy(p => p.PrecioVenta).ToList();
             _precioFiltro = false;
         }
         else
         {
-            _productos = _productos.OrderByDescending(p => p.PrecioVenta).ToList();
+            _productosFiltrados = _productosFiltrados.OrderByDescending(p => p.PrecioVenta).ToList();
             _precioFiltro = true;
         }
     }
@@ -64,12 +100,12 @@ public partial class Inventario
     {
         if (_precioFiltro)
         {
-            _productos = _productos.OrderBy(p => p.Stock).ToList();
+            _productosFiltrados = _productosFiltrados.OrderBy(p => p.Stock).ToList();
             _precioFiltro = false;
         }
         else
         {
-            _productos = _productos.OrderByDescending(p => p.Stock).ToList();
+            _productosFiltrados = _productosFiltrados.OrderByDescending(p => p.Stock).ToList();
             _precioFiltro = true;
         }
     }
