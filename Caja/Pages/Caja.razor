@@ -5,21 +5,66 @@
 
 <div class="min-h-screen w-full bg-gray-50 text-gray-800">
     <main class="flex-1 p-4 lg:p-6">
-          <!-- Header -->
-        <header class="bg-white rounded-xl shadow-sm p-4 lg:p-6 mb-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
+        <!-- Encabezado: Buscador + Botón -->
+        <div class="bg-white rounded-xl shadow-sm px-4 py-6 sm:px-6 lg:p-4 mb-6">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <header>
                     <h1 class="text-xl lg:text-2xl font-bold text-gray-800">Caja</h1>
-                </div>
-                <input type="text" placeholder="Buscar venta..." class="w-1/2 border border-gray-500 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                    <button
-                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 
-                                   focus:outline-none cursor-pointer transition duration-200 hover:scale-105">
-                        + Nueva Venta
+                </header>
+                <form class="flex flex-row w-full gap-4">
+                    <input 
+                        type="text" 
+                        placeholder="Buscar producto..." 
+                        class="w-full border border-gray-500 rounded-lg px-4 py-2 text-sm 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </form>
+                <div>
+                    <button class="bg-blue-600 text-sm text-white px-4 py-2 rounded-lg hover:bg-blue-700 
+                        focus:outline-none cursor-pointer transition duration-200 hover:scale-105">
+                        Venta
                     </button>
                 </div>
             </div>
-        </header>
+        </div>
+
+        <!-- Cuerpo: dos columnas con scroll -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Columna izquierda: Categorías -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-100 px-4 py-3 font-medium text-gray-700 border-b">
+                    Categorías
+                </div>
+                <div class="max-h-96 overflow-y-auto">
+                    @foreach (var categoria in Categorias)
+                    {
+                        <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 
+                                    transition-colors duration-150 flex items-center justify-between">
+                            <span class="text-gray-800">@categoria</span>
+                            <span class="text-xs text-gray-400">➜</span>
+                        </div>
+                    }
+                    @if (!Categorias.Any())
+                    {
+                        <div class="px-4 py-6 text-center text-gray-400">No hay categorías</div>
+                    }
+                </div>
+            </div>
+
+            <!-- Columna derecha: Venta Actual -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gray-100 px-4 py-3 font-medium text-gray-700 border-b">
+                    🛒 Venta Actual
+                </div>
+                <div class="max-h-96 overflow-y-auto p-4">
+                    <div class="text-center text-gray-400 py-8">
+                        <p>No hay productos seleccionados</p>
+                        <p class="text-sm mt-1">Haz clic en una categoría para agregar</p>
+                    </div>
+                    <!-- Aquí irían los productos agregados -->
+                </div>
+            </div>
+
+        </div>
     </main>
 </div>

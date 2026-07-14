@@ -1,28 +1,36 @@
-// using Microsoft.AspNetCore.Components;
-// using SgiMadsi.Caja.Services;
-// using SgiMadsi.Shared.Domain;
-// using System.Collections.Generic;
-// using System.Linq;
+using Microsoft.AspNetCore.Components;
+using SgiMadsi.Shared.Domain;
+using SgiMadsi.Shared.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
 
-// namespace SgiMadsi.Caja.Pages
-// {
-//     public partial class Caja
-//     {
-//         [Inject]
-//         private VentaService ventaService { get; set; } = default!;
+namespace SgiMadsi.Caja.Pages
+{
+    public partial class Caja
+    {
+        [Inject]
+        private IProductoServices ProductoServices { get; set; } = default!;
+        private List<Producto> _productosOriginales = new();
+        private List<string> Categorias { get; set; } = new();
 
-//         private List<string> Carrito = new ()
-//         {
-//             "Mouse",
-//             "Teclado",
-//             "Monitor"
-//         };
+        protected override async Task OnInitializedAsync()
+        {
+            _productosOriginales = await ProductoServices.ObtenerProductosAsync();
+            _productosOriginales = _productosOriginales.OrderBy(p => p.Subcategoria).ToList();
 
-//         private string busqueda = string.Empty;
+            Categorias = _productosOriginales.Select(p => p.Subcategoria)
+            .Distinct()
+            .ToList(); 
+        }
 
-//         private IEnumerable<CarritoItem> CarritoItems => 
-//             ventaService.Carrito.Where(c =>
-//                 string.IsNullOrWhiteSpace(busqueda) ||
-//                  c.Nombre.Contains(busqueda, StringComparison.OrdinalIgnoreCase));
-//     }
-// 
+        private void SumarCuenta()
+        {
+            if(Categorias.Any())
+            {
+                
+            }
+        }
+    }
+
+    
+}
