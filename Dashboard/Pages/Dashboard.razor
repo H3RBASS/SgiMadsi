@@ -24,48 +24,58 @@
                 </div>
             </div>
         </header>
-@* 
+ 
         <!-- Modal -->
         @if (MostrarModal)
         {
             <div class="fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50">
-                <!-- Alerta -->
-                @if (AlertaVentana)
-                {
-                    <div class="fixed top-5 right-5 bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg z-50 
-                                flex items-center gap-3 animate-pulse">
-                        <span>⚠️ Rellena todos los campos</span>
-                        <button @onclick="() => AlertaVentana = false" 
-                                class="text-white hover:text-gray-200 text-xl font-bold">
-                            x
-                        </button>
-                    </div>
-                }
-
-                <!-- Ventana Modal -->
                 <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
                     <h3 class="text-xl font-semibold mb-4 text-center">Añadir producto</h3>
 
-                    <EditForm Model="ProductosForm" OnValidSubmit="Guardar" class="flex flex-col gap-4">
+                    <EditForm Model="_nuevoProducto" OnValidSubmit="GuardarProducto" class="flex flex-col gap-4">
                         <DataAnnotationsValidator />
 
-                        <span>Nombre</span>
-                        <InputText @bind-Value="ProductosForm.Nombre"
+                        <span>Nombre Producto</span>
+                        <InputText @bind-Value="_nuevoProducto.Nombre"
+                                    placeholder="ej: Ola Maximus Antigrasa"
                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <ValidationMessage For="() => ProductosForm.Nombre" />
+                        <ValidationMessage For="() => _nuevoProducto.Nombre" />
 
-                        <span>Precio (Bs)</span>
-                        <InputNumber @bind-Value="ProductosForm.Precio" min="0" step="0.01"
+                        <span>Precio Venta (Bs)</span>
+                        <InputNumber @bind-Value="_nuevoProducto.PrecioVenta" min="0" step="0.01"
                                      class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <ValidationMessage For="() => ProductosForm.Precio" />
+                        <ValidationMessage For="() => _nuevoProducto.PrecioVenta" />
+
+                        @* <span>Precio Compra (Bs)</span>
+                        <InputNumber @bind-Value="_nuevoProducto.PrecioCompra" min="0" step="0.01"
+                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <ValidationMessage For="() => _nuevoProducto.PrecioCompra" /> *@
 
                         <span>Stock <span class="text-gray-500 text-sm lg:text-base mt-1">(opcional)</span></span>
-                        <InputNumber @bind-Value="ProductosForm.Cantidad" min="0" step="1" inputmode="numeric"
+                        <InputNumber @bind-Value="_nuevoProducto.Stock" min="0" step="1" inputmode="numeric"
                                      class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <ValidationMessage For="() => ProductosForm.Cantidad" />
+                        <ValidationMessage For="() => _nuevoProducto.Stock" />
+                        
+                        <span>Presentacion</span>
+                        <InputText @bind-Value="_nuevoProducto.Presentacion"
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <ValidationMessage For="() => _nuevoProducto.Presentacion" />
+
+
+                        <span>Unidad</span>
+                        <InputSelect @bind-Value="_nuevoProducto.Unidad" 
+                                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="" disabled selected hidden>Seleccione una unidad</option>
+                            <option value="kg">Kg</option>
+                            <option value="lt">Lt</option>
+                            <option value="uds">Unidades</option>
+                            <option value="ml">Ml</option>
+                            <option value="g">G</option>
+                        </InputSelect>
+                        <ValidationMessage For="() => _nuevoProducto.Unidad" />
 
                         <span>Categoría</span>
-                        <InputSelect @bind-Value="ProductosForm.Categoria" 
+                        <InputSelect @bind-Value="_nuevoProducto.Categoria" 
                                      class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled selected hidden>Seleccione una categoría</option>
                             <option value="Aseo Personal">Cuidado Personal</option>
@@ -76,7 +86,7 @@
                             <option value="Reposteria">Reposteria</option>
                             <option value="Abarrotes">Abarrotes</option>
                         </InputSelect>
-                        <ValidationMessage For="() => ProductosForm.Categoria" />
+                        <ValidationMessage For="() => _nuevoProducto.Categoria" />
 
                         <!-- Botones -->
                         <div class="flex justify-end gap-3 mt-6">
@@ -93,7 +103,7 @@
                     </EditForm>
                 </div>
             </div>
-        } *@
+        } 
 
         <!-- Grid de tarjetas KPI -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-6">

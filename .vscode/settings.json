@@ -1,1 +1,18 @@
-{}
+{
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.parameterHints.enabled": true,
+  "editor.inlineSuggest.enabled": true,
+  "csharp.suppressDotnetRestoreNotification": false,
+  "csharp.format.enable": true,
+  "csharp.semanticHighlighting.enabled": true,
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.useModernNet": true,
+  "razor.languageServer.enabled": true,
+  "razor.editor.quickInfo.enabled": true,
+  "razor.semanticHighlighting.enabled": true
+}

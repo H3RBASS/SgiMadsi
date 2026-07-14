@@ -28,8 +28,8 @@ public partial class Inventario
         _productosOriginales = _productosOriginales.OrderBy(p => p.Subcategoria).ToList();
         _productosFiltrados = _productosOriginales.ToList();
     }
-private void BuscarProductos()
-{
+    private void BuscarProductos()
+    {
     // Eliminamos los espacios en blanco al inicio y al final de la búsqueda
     var busqueda = _busqueda.Trim();
 
@@ -54,7 +54,7 @@ private void BuscarProductos()
                  StringComparison.OrdinalIgnoreCase));
         })
         .ToList();
-}
+    }
     private void OrdenarProductos()
     {
         if (_productoFiltro)

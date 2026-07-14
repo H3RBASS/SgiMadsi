@@ -15,6 +15,9 @@ public partial class Dashboard
     //lista donde se guardaran los productos obtenidos del servicio
     private List<Producto> _productos = new();  
 
+    //lista para crear productos
+    private Producto _nuevoProducto = new();
+
     //metodo que se ejecuta al inicializar el componente
     protected override async Task OnInitializedAsync()
     {
@@ -30,22 +33,15 @@ public partial class Dashboard
     public bool MostrarModal { get; set; }
     private bool AlertaVentana {get; set;} = false;
 
-    private Producto ProductosForm = new Producto();
-
-    //metodos
-    // protected void Guardar()
-    // {
-    //        servicioProductos.CrearProducto(
-    //         ProductosForm.Nombre,
-    //         ProductosForm.Categoria,
-    //         ProductosForm.Precio!.Value,
-    //         ProductosForm.Cantidad
-    //     );
-
-    //     // Limpiamos el formulario
-    //     LimpiarFormulario();
-    //     CerrarModal();
-    // }
+    public async Task GuardarProducto()
+    {
+        await ProductoServices.CrearProductoAsync(_nuevoProducto);
+        // Limpiamos el formulario
+        LimpiarFormulario();
+        _productos = await ProductoServices.ObtenerProductosAsync();
+        CerrarModal();
+    }
+    
 
     protected void AbrirModal()
     {
@@ -61,7 +57,7 @@ public partial class Dashboard
 
     protected void LimpiarFormulario()
     {
-        ProductosForm = new Producto();
+        _nuevoProducto = new Producto();
     }
 }   
     
