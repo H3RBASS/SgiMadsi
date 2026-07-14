@@ -32,5 +32,12 @@ namespace SgiMadsi.Shared.Services
             return response.Models;
         }
 
+        public async Task CrearProductoAsync(Producto producto)
+        {
+            await _client.From<Producto>()
+            .Insert(producto);
+            _productosCache.Clear();
+        }
+
     }
 }
