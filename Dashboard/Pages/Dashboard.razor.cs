@@ -11,12 +11,18 @@ public partial class Dashboard
     // Inyectamos el servicio de productos
     [Inject]
     private IProductoServices ProductoServices { get; set; } = default!;
+    private IProveedoresServices ProveedorServices { get; set; } = default!;
+
+    //variables
+    private bool _procesando;
+    private bool _mensajeConfirmacion;
 
     //lista donde se guardaran los productos obtenidos del servicio
-    private List<Producto> _productos = new();  
+    private List<Producto> _productos = new();
 
     //lista para crear productos
     private Producto _nuevoProducto = new();
+    private Proveedores _nuevoProveedor = new();
 
     //metodo que se ejecuta al inicializar el componente
     protected override async Task OnInitializedAsync()
@@ -31,18 +37,80 @@ public partial class Dashboard
 
     //variable para controlar la visibilidad del modal
     public bool MostrarModal { get; set; }
-    private bool AlertaVentana {get; set;} = false;
+    private bool MostrarVentanaProveedor {get; set;}
 
     public async Task GuardarProducto()
     {
-        await ProductoServices.CrearProductoAsync(_nuevoProducto);
+        if(_procesando)
+    
+            return;
+             _procesando = true;
+        
+        try
+        {
+            _nuevoProducto.Nombre = LimpiarTexto(_nuevoProducto.Nombre);
+            _nuevoProducto.Subcategoria = LimpiarTexto(_nuevoProducto.Subcategoria);
+            await ProductoServices.CrearProductoAsync(_nuevoProducto);
+        }
+
+        finally
+        {
+            // Limpiamos el formulario
+            LimpiarFormulario();
+            //obtenemos los datos actualizados
+            _productos = await ProductoServices.ObtenerProductosAsync();
+            //habilitamos el boton de guardar
+            _procesando = false;
+            _mensajeConfirmacion = true;
+            //indicar que algun componente cambio y blazor vuelva a renderizar
+            StateHasChanged();
+            await Task.Delay(2000);
+            StateHasChanged();
+            _mensajeConfirmacion = false;
+        }
+    }
+
+    public async Task GuardarProveedor()
+    {
+        await ProveedorServices.CrearProveedorAsync(_nuevoProveedor);
         // Limpiamos el formulario
         LimpiarFormulario();
-        _productos = await ProductoServices.ObtenerProductosAsync();
-        CerrarModal();
+        CerrarVentanaProveedor();
+    }
+
+    private static string LimpiarTexto(string texto)
+    {
+        // La cadena de ej es "oLa maximus  Antigrasa"
+        // Limpiar espacios multiples
+        var resultado = texto.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        //en resultado tenemos el arreglo con las palabras ["oLa ", "maximus ","Antigrasa"]
+        for (int i = 0 ; i < resultado.Length; i++)
+        {
+            //obtenemos la primer palabra del arreglo
+            string palabraActual = resultado[i];
+            //obtenemos la primer letra
+            char primerLetra = char.ToUpper(palabraActual[0]);
+            //obtenemos el resto de la palabra desde X posicion en adelante y en minusculas
+            string restoPalabra = palabraActual.Substring(1).ToLower();
+            //creamos la cadena contatenando las partes
+            resultado[i] = $"{primerLetra}{restoPalabra}";
+        }
+        //Retornamos la palabra uniendo
+        return string.Join(" ", resultado);
+    } 
+
+    protected void AbrirVentanaProveedor()
+    {
+        LimpiarFormulario();
+        MostrarVentanaProveedor = true;
     }
     
-
+    protected void CerrarVentanaProveedor()
+    {
+        LimpiarFormulario();
+        MostrarVentanaProveedor = false;
+    }
+    
     protected void AbrirModal()
     {
         LimpiarFormulario();
@@ -58,7 +126,9 @@ public partial class Dashboard
     protected void LimpiarFormulario()
     {
         _nuevoProducto = new Producto();
+        _nuevoProveedor = new Proveedores();
     }
+
 }   
     
 

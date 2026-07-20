@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
@@ -18,15 +19,17 @@ public class Producto : BaseModel
     public string Categoria { get; set; } = string.Empty;
     
     [Column("subcategoria")]
+    [Required(ErrorMessage = "La subcategoría es obligatoria")]
     public string Subcategoria { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "El nombre del producto es obligatorio")]
     [Column("nombre")]
     public string Nombre { get; set; } = string.Empty;
 
+    [Range(0.01, double.MaxValue, ErrorMessage = "La presentación debe ser mayor a 0")]
     [Required(ErrorMessage = "La presentación es obligatoria")]
     [Column("presentacion")]
-    public string Presentacion { get; set; } = string.Empty;
+    public decimal Presentacion { get; set; }
 
     [Required(ErrorMessage = "La unidad es obligatoria")]
     [Column("unidad")]
