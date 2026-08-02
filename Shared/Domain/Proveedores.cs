@@ -20,6 +20,6 @@ public class Proveedores : BaseModel
     [Column("detalle")]
     public string Detalle { get; set; } = string.Empty;
 
-    // [Column("imagen")]
-    // public string Imagen { get; set; } = string.Empty;
+    [Column("imagen")]
+    public string Imagen { get; set; } = string.Empty;
 }

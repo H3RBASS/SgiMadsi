@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using SgiMadsi.Shared.Domain;
 using SgiMadsi.Shared.Services;
 using SgiMadsi.Shared.Interfaces;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace SgiMadsi.Dashboard.Pages;
 public partial class Dashboard
@@ -11,11 +12,16 @@ public partial class Dashboard
     // Inyectamos el servicio de productos
     [Inject]
     private IProductoServices ProductoServices { get; set; } = default!;
+
+    [Inject]
     private IProveedoresServices ProveedorServices { get; set; } = default!;
 
     //variables
     private bool _procesando;
     private bool _mensajeConfirmacion;
+
+    //variable para guardar la imagen temporalmente
+    private IBrowserFile? _archivoSeleccionado;
 
     //lista donde se guardaran los productos obtenidos del servicio
     private List<Producto> _productos = new();
@@ -36,7 +42,7 @@ public partial class Dashboard
         _productos.Where(p => p.Stock > 0 && p.Stock <= 10).ToList();
 
     //variable para controlar la visibilidad del modal
-    public bool MostrarModal { get; set; }
+    private bool MostrarModal { get; set; }
     private bool MostrarVentanaProveedor {get; set;}
 
     public async Task GuardarProducto()
@@ -70,12 +76,21 @@ public partial class Dashboard
         }
     }
 
-    public async Task GuardarProveedor()
+    private void SeleccionarImagen(InputFileChangeEventArgs e)
     {
+        _archivoSeleccionado = e.File;
+    }
+    private async Task GuardarProveedor()
+    {
+
+        if (_archivoSeleccionado is not null)
+        {
+            var url = await ProveedorServices.SubirImagenAsync(_archivoSeleccionado);
+
+            _nuevoProveedor.Imagen = url;
+        }
         await ProveedorServices.CrearProveedorAsync(_nuevoProveedor);
         // Limpiamos el formulario
-        LimpiarFormulario();
-        CerrarVentanaProveedor();
     }
 
     private static string LimpiarTexto(string texto)
