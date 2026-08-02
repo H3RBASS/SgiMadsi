@@ -22,6 +22,10 @@ namespace SgiMadsi.Caja.Pages
             .Distinct()
             .ToList(); 
         }
+        private void obtenerProductoVenta(string _producto)
+        {
+            
+        }
 
         private void SumarCuenta()
         {

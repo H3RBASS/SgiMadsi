@@ -28,43 +28,50 @@
         </div>
 
         <!-- Cuerpo: dos columnas con scroll -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Contenedor padre: ocupa todo el alto restante (ajusta según tu layout) -->
+<div class="h-[calc(100vh-150px)] p-4"> <!-- Si no usas flex, usa h-[calc(100vh-200px)] o similar -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+        
+        <!-- Columna izquierda: Categorías -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+            <div class="bg-gray-100 px-4 py-3 font-medium text-gray-700 border-b flex-none">
+                Categorías
+            </div>
             
-            <!-- Columna izquierda: Categorías -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="bg-gray-100 px-4 py-3 font-medium text-gray-700 border-b">
-                    Categorías
-                </div>
-                <div class="max-h-96 overflow-y-auto">
-                    @foreach (var categoria in Categorias)
+            <!-- Grid de categorías responsivo y scrolleable -->
+            <div class="flex-1 overflow-y-auto min-h-0 p-1">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-1 auto-rows-min">
+                    @foreach (var categoria in Categorias.OrderBy(c => c))
                     {
-                        <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 
-                                    transition-colors duration-150 flex items-center justify-between">
-                            <span class="text-gray-800">@categoria</span>
-                            <span class="text-xs text-gray-400">➜</span>
-                        </div>
+                        <button class="flex items-center justify-center w-full py-3 px-2 cursor-pointer 
+                                       text-gray-700 hover:bg-gray-800 hover:text-white 
+                                       transition-colors duration-150 focus:outline-none rounded-lg">
+                            <span class="text-sm font-medium text-center break-words">@categoria</span>
+                        </button>
                     }
                     @if (!Categorias.Any())
                     {
-                        <div class="px-4 py-6 text-center text-gray-400">No hay categorías</div>
+                        <div class="col-span-full px-4 py-8 text-center text-gray-400">No hay categorías</div>
                     }
                 </div>
             </div>
-
-            <!-- Columna derecha: Venta Actual -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="bg-gray-100 px-4 py-3 font-medium text-gray-700 border-b">
-                    🛒 Venta Actual
-                </div>
-                <div class="max-h-96 overflow-y-auto p-4">
-                    <div class="text-center text-gray-400 py-8">
-                        <p>No hay productos seleccionados</p>
-                        <p class="text-sm mt-1">Haz clic en una categoría para agregar</p>
-                    </div>
-                    <!-- Aquí irían los productos agregados -->
-                </div>
-            </div>
-
         </div>
+
+        <!-- Columna derecha: Venta Actual -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+            <div class="bg-gray-100 px-4 py-3 font-medium text-gray-700 border-b flex-none">
+                🛒 Venta Actual
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 min-h-0">
+                <div class="text-center text-gray-400 py-8">
+                    <p>No hay productos seleccionados</p>
+                    <p class="text-sm mt-1">Haz clic en una categoría para agregar</p>
+                </div>
+                <!-- Aquí irían los productos agregados -->
+            </div>
+        </div>
+
+    </div>
+</div>
     </main>
 </div>
