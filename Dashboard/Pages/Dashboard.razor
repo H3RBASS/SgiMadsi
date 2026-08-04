@@ -106,20 +106,6 @@
                                 <ValidationMessage For="() => _nuevoProducto.Unidad" class="text-sm text-red-600" />
                             </div>
 
-                            <!-- Stock (opcional) -->
-                            @* <div class="flex flex-col gap-1">
-                                <label for="stock" class="text-sm font-medium text-gray-700">
-                                    Stock <span class="text-gray-400 font-normal">(opcional)</span>
-                                </label>
-                                <InputNumber @bind-Value="_nuevoProducto.Stock"
-                                            id="stock"
-                                            min="0"
-                                            step="1"
-                                            inputmode="numeric"
-                                            placeholder="Cantidad en existencia"
-                                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out" />
-                                <ValidationMessage For="() => _nuevoProducto.Stock" class="text-sm text-red-600" />
-                            </div> *@
 
                             <!-- Categoría -->
                             <div class="flex flex-col gap-1">
@@ -156,6 +142,22 @@
                                     }
                                 </datalist>
                                 <ValidationMessage For="() => _nuevoProducto.Subcategoria" class="text-sm text-red-600" />
+                            </div>
+
+                            <!-- Stock (opcional) -->
+                             <div class="flex flex-col gap-1">
+                                <label for="stock" class="text-sm font-medium text-gray-700">
+                                    Stock <span class="text-gray-400 font-normal"></span>
+                                </label>
+                                <InputNumber @bind-Value="_nuevoProducto.Stock"
+                                            id="stock"
+                                            min="0"
+                                            step="1"
+                                            inputmode="numeric"
+                                            placeholder="Cantidad en existencia"
+                                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out" />
+                                <span class="text-xs text-gray-500 mt-0.5">(Opcional)</span>
+                                <ValidationMessage For="() => _nuevoProducto.Stock" class="text-sm text-red-600" />
                             </div>
                         </div>
                             @* Aqui oculta/muestra el mensaje, si se guardo o no el producto en la BD *@
@@ -225,8 +227,9 @@
     } 
         @if (MostrarVentanaProveedor)
         {
-            <div class="fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50">
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50 p-4">
                 <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+
                     <h3 class="text-xl font-semibold mb-4 text-center">Añadir proveedor</h3>
 
                     <EditForm Model="_nuevoProveedor" OnValidSubmit="GuardarProveedor" class="flex flex-col gap-4">
