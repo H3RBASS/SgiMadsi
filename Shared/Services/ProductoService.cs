@@ -34,8 +34,34 @@ namespace SgiMadsi.Shared.Services
 
         public async Task CrearProductoAsync(Producto producto)
         {
+            try
+            {
+                await _client.From<Producto>()
+                    .Insert(producto);
+                
+                _productosCache.Clear();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al crear el producto: {ex.Message}", ex);
+            }
+        }
+
+        public async Task EditarProductoAsync(Producto producto)
+        {
             await _client.From<Producto>()
-            .Insert(producto);
+                .Where(p => p.Id == producto.Id)
+                .Update(producto);
+
+            _productosCache.Clear();
+        }
+
+        public async Task EliminarProductoAsync(int id)
+        {
+            await _client.From<Producto>()
+                .Where(p => p.Id == id)
+                .Delete();
+
             _productosCache.Clear();
         }
 

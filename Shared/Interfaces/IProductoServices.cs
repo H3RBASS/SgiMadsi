@@ -6,4 +6,7 @@ public interface IProductoServices
 {
     Task<List<Producto>> ObtenerProductosAsync();
     Task CrearProductoAsync(Producto producto);
+    Task EditarProductoAsync(Producto producto);
+    Task EliminarProductoAsync(int id);
+
 }

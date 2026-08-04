@@ -48,4 +48,16 @@ public class Producto : BaseModel
     // [Required(ErrorMessage = "El precio es obligatorio")]
     [Column("precioCompra")]
     public decimal PrecioCompra { get; set; } = 0;
+
+    public void CopiarDesde(Producto origen)
+    {
+        Nombre = origen.Nombre;
+        Categoria = origen.Categoria;
+        Subcategoria = origen.Subcategoria;
+        PrecioCompra = origen.PrecioCompra;
+        PrecioVenta = origen.PrecioVenta;
+        Stock = origen.Stock;
+        Unidad = origen.Unidad;
+        Presentacion = origen.Presentacion;
+    }
 }

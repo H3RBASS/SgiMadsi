@@ -36,7 +36,198 @@
                 </div>
             </div>
         </header>
+                <!-- Modal -->
+        @if (_mostrarModalEditar)
+        {
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-md flex items-center justify-center z-50 p-4">
+                <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 md:p-8 transition-all duration-300 max-h-[90vh] overflow-y-auto">
 
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Editar producto</h3>
+
+                        <EditForm Model="_productoEditando" OnValidSubmit="GuardarCambios">
+                            <DataAnnotationsValidator />
+
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-4">
+                                <!-- Nombre (ocupa toda la fila) -->
+                                <div class="col-span-2 flex flex-col gap-1">
+                                    <label for="nombre" class="text-sm font-medium text-gray-700">Nombre del producto</label>
+                                    <InputText @bind-Value="_productoEditando.Nombre"
+                                            id="nombre"
+                                            placeholder="Ej: Nacional Clasico Doble Hoja"
+                                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out" />
+                                    <ValidationMessage For="() => _productoEditando.Nombre" class="text-sm text-red-600" />
+                                </div>
+
+                                <!-- Precio Venta -->
+                                <div class="flex flex-col gap-1">
+                                    <label for="precioVenta" class="text-sm font-medium text-gray-700">Precio Venta (Bs)</label>
+                                    <InputNumber @bind-Value="_productoEditando.PrecioVenta"
+                                                id="precioVenta"
+                                                min="0"
+                                                step="0.01"
+                                                placeholder="0.00"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out" />
+                                    <ValidationMessage For="() => _productoEditando.PrecioVenta" class="text-sm text-red-600" />
+                                </div>
+
+                                <!-- Precio Compra -->
+                                <div class="flex flex-col gap-1">
+                                    <label for="precioCompra" class="text-sm font-medium text-gray-700">Precio Compra (Bs)</label>
+                                    <InputNumber @bind-Value="_productoEditando.PrecioCompra"
+                                                id="precioCompra"
+                                                min="0"
+                                                step="0.01"
+                                                placeholder="0.00"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out" />
+                                    <span class="text-xs text-gray-500 mt-0.5">(Opcional)</span>
+                                    <ValidationMessage For="() => _productoEditando.PrecioCompra" class="text-sm text-red-600" />
+                                </div>
+
+                                <!-- Presentación -->
+                                <div class="flex flex-col gap-1">
+                                    <label for="presentacion" class="text-sm font-medium text-gray-700">Presentación</label>
+                                    <InputNumber @bind-Value="_productoEditando.Presentacion"
+                                                id="presentacion"
+                                                min="0"
+                                                step="0.01"
+                                                placeholder="Cantidad numérica"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out" />
+                                    <span class="text-xs text-gray-500 mt-0.5">Ej: 1, 500, 1000 (sin unidad)</span>
+                                    <ValidationMessage For="() => _productoEditando.Presentacion" class="text-sm text-red-600" />
+                                </div>
+
+                                <!-- Unidad -->
+                                <div class="flex flex-col gap-1">
+                                    <label for="unidad" class="text-sm font-medium text-gray-700">Unidad</label>
+                                    <InputSelect @bind-Value="_productoEditando.Unidad"
+                                                id="unidad"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out appearance-none bg-white">
+                                        <option value="" disabled selected hidden>Seleccionar</option>
+                                        <option value="Kg">Kilogramos (kg)</option>
+                                        <option value="G">Gramos (g)</option>
+                                        <option value="L">Litros (l)</option>
+                                        <option value="Ml">Mililitros (ml)</option>
+                                        <option value="Uds">Unidades (uds)</option>
+                                    </InputSelect>
+                                    <ValidationMessage For="() => _productoEditando.Unidad" class="text-sm text-red-600" />
+                                </div>
+
+                                <!-- Stock (opcional) -->
+                                <div class="flex flex-col gap-1">
+                                    <label for="stock" class="text-sm font-medium text-gray-700">
+                                        Stock <span class="text-gray-400 font-normal">(opcional)</span>
+                                    </label>
+                                    <InputNumber @bind-Value="_productoEditando.Stock"
+                                                id="stock"
+                                                min="0"
+                                                step="1"
+                                                inputmode="numeric"
+                                                placeholder="Cantidad en existencia"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out" />
+                                    <ValidationMessage For="() => _productoEditando.Stock" class="text-sm text-red-600" />
+                                </div> 
+
+                                <!-- Categoría -->
+                                <div class="flex flex-col gap-1">
+                                    <label for="categoria" class="text-sm font-medium text-gray-700">Categoría</label>
+                                    <InputSelect @bind-Value="_productoEditando.Categoria"
+                                                id="categoria"
+                                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out appearance-none bg-white">
+                                        <option value="" disabled selected hidden>Seleccione una categoría</option>
+                                        <option value="Abarrotes">Abarrotes</option>
+                                        <option value="Cocina">Cocina</option>
+                                        <option value="Enlatados">Enlatados</option>
+                                        <option value="Higiene Personal">Higiene Personal</option>
+                                        <option value="Insumos y Otros">Insumos y Otros</option>
+                                        <option value="Limpieza">Limpieza</option>
+                                        <option value="Plasticos">Plásticos</option>
+                                        <option value="Reposteria">Repostería</option>
+                                    </InputSelect>
+                                    <ValidationMessage For="() => _productoEditando.Categoria" class="text-sm text-red-600" />
+                                </div>
+
+                                <!-- Subcategoría -->
+                                <div class="flex flex-col gap-1">
+                                    <label for="subcategoria" class="text-sm font-medium text-gray-700">Subcategoría</label>
+                                    <input id="subcategoria"
+                                        list="subcategorias-list"
+                                        @bind="_productoEditando.Subcategoria"
+                                        @bind:event="oninput"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out bg-white"
+                                        placeholder="Escribe o selecciona..." />
+                                    <datalist id="subcategorias-list">
+                                        @foreach (var subcategoria in _productosOriginales.Select(p => p.Subcategoria).Distinct().OrderBy(s => s))
+                                        {
+                                            <option value="@subcategoria" />
+                                        }
+                                    </datalist>
+                                    <ValidationMessage For="() => _productoEditando.Subcategoria" class="text-sm text-red-600" />
+                                </div>
+                            </div>
+                                @* Aqui oculta/muestra el mensaje, si se guardo o no el producto en la BD *@
+                                @if(_mensajeConfirmacion)
+                                    {
+                                        <h1 class="w-full mt-6 bg-green-100 text-green-400 text-center rounded-md py-2">"Datos actualizados correctamente"</h1>
+                                    } 
+                            <!-- Botones -->
+                            <div class="flex flex-col-reverse sm:flex-row justify-center items-center gap-3 mt-6 pt-6 border-t border-gray-200">
+                                <!-- Botón Cancelar -->
+                                <button class="w-full sm:w-auto cursor-pointer px-6 py-2.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all duration-200 font-medium flex items-center justify-center gap-2"
+                                        type="button"
+                                        @onclick="CerrarModal">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                    Cancelar
+                                </button>
+                                @* Condicional para el estado de Boton Guardar *@
+                                @if(_procesando)
+                                {
+                                    <button
+                                        disabled
+                                        class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-70">
+
+                                        <svg
+                                            class="h-5 w-5 animate-spin"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24">
+
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="4"/>
+
+                                            <path
+                                                class="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                                        </svg>
+
+                                        Guardando...
+                                    </button>
+                                }
+                                else
+                                {
+                                    <!-- Botón Guardar -->
+                                    <button class="w-full sm:w-auto cursor-pointer px-6 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 font-medium shadow-sm flex items-center justify-center gap-2"
+                                            disabled="@_procesando"
+                                            type="submit">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Guardar 
+                                    </button>
+                                }
+                            
+                            </div>
+                        </EditForm>
+                </div>
+            </div>
+        }
         <!-- Tabla de productos -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden">
             <div class="overflow-x-auto max-h-[84vh] overflow-y-auto">
@@ -92,7 +283,16 @@
                                 <td class="py-3 px-4 text-center font-medium text-gray-700">@producto.PrecioVenta</td>
                                 <td class="py-3 px-4 text-center font-medium text-gray-700">@producto.Stock</td>
                                 <td class="py-3 px-4 text-center font-medium text-gray-700">@producto.Categoria</td>
-                                <td class="py-3 px-4 text-center font-medium text-gray-700"><button>editar</button></td>
+                                <td class="py-3 px-4 text-center align-middle font-medium text-gray-700"> 
+                                    <button @onclick="() => ObtenerProductoEditar(producto)"
+                                        class="cursor-pointer p-1 rounded-md hover:scale-120 transition-transform duration-150"> 
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#364153" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                                            class="lucide lucide-square-pen-icon lucide-square-pen">
+                                            <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>
+                                        </svg>
+                                    </button>
+                                </td>
                             </tr>
                         }
                     </tbody>
