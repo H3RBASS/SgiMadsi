@@ -13,6 +13,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddSingleton<IProductoServices, ProductoService>();
+builder.Services.AddScoped<IProveedoresServices, ProveedoresService>();
 
 //conexion a supabase
 

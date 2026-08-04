@@ -18,7 +18,10 @@ public partial class Dashboard
 
     //variables
     private bool _procesando;
+    private bool _procesandoProveedor;
+    
     private bool _mensajeConfirmacion;
+    private bool _mensajeConfirmacionProveedores;
 
     //variable para guardar la imagen temporalmente
     private IBrowserFile? _archivoSeleccionado;
@@ -26,7 +29,7 @@ public partial class Dashboard
     //lista donde se guardaran los productos obtenidos del servicio
     private List<Producto> _productos = new();
 
-    //lista para crear productos
+    //objetos vacios para crear productos y despues anadirlos a la BD
     private Producto _nuevoProducto = new();
     private Proveedores _nuevoProveedor = new();
 
@@ -82,15 +85,32 @@ public partial class Dashboard
     }
     private async Task GuardarProveedor()
     {
+        if(_procesandoProveedor)
+            return;
+        
+        _procesandoProveedor = true;
 
-        if (_archivoSeleccionado is not null)
+        try
         {
-            var url = await ProveedorServices.SubirImagenAsync(_archivoSeleccionado);
+            if (_archivoSeleccionado is not null)
+            {
+                var url = await ProveedorServices.SubirImagenAsync(_archivoSeleccionado);
 
-            _nuevoProveedor.Imagen = url;
+                _nuevoProveedor.Imagen = url;
+            }
+            await ProveedorServices.CrearProveedorAsync(_nuevoProveedor);
         }
-        await ProveedorServices.CrearProveedorAsync(_nuevoProveedor);
-        // Limpiamos el formulario
+        
+        finally
+        {
+            LimpiarFormulario();
+            _procesandoProveedor = false;
+            _mensajeConfirmacionProveedores = true;
+            StateHasChanged();
+            await Task.Delay(2000);
+            StateHasChanged();
+            _mensajeConfirmacionProveedores = false;
+        }
     }
 
     private static string LimpiarTexto(string texto)
