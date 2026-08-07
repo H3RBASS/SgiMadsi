@@ -16,11 +16,11 @@ concurrency:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
 
     steps:
       - name: Descargar repositorio
@@ -31,13 +31,24 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Instalar dependencias de npm
+        run: npm install
+
+      - name: Compilar Tailwind CSS
+        run: npm run build-css
+
       - name: Restaurar paquetes
         run: dotnet restore
-        
+
       - name: Configurar base href para GitHub Pages
         run: |
-            sed -i 's|<base href="/" />|<base href="/SgiMadsi/" />|' wwwroot/index.html
-            
+          sed -i 's|<base href="/" />|<base href="/SgiMadsi/" />|' wwwroot/index.html
+
       - name: Publicar aplicación
         run: dotnet publish -c Release -o publish
 
