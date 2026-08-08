@@ -83,6 +83,10 @@ public partial class Dashboard
     {
         _archivoSeleccionado = e.File;
     }
+    private void EliminarArchivo()
+    {
+        _archivoSeleccionado = null;
+    }
     private async Task GuardarProveedor()
     {
         if(_procesandoProveedor)
@@ -143,6 +147,7 @@ public partial class Dashboard
     protected void CerrarVentanaProveedor()
     {
         LimpiarFormulario();
+        EliminarArchivo();
         MostrarVentanaProveedor = false;
     }
     
