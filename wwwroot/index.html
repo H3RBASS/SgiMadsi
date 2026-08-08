@@ -4,11 +4,27 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SgiMadsi</title>
+    <title>MADSI</title>
     <base href="/" />
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/app.css" />
     <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#213458">
+
+    <!-- Favicon navegador -->
+    <link rel="icon" type="image/x-icon" href="Icons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="Icons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="Icons/favicon-32x32.png">
+
+    <!-- Apple -->
+    <link rel="apple-touch-icon" href="Icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- Android / navegadores móviles -->
+    <meta name="mobile-web-app-capable" content="yes">
 </head>
 
 <body>
@@ -26,6 +42,15 @@
         <span class="dismiss">🗙</span>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(() => console.log('Service Worker registrado'))
+                    .catch(error => console.error('Error registrando Service Worker:', error));
+            });
+        }
+    </script>
 </body>
 
 </html>

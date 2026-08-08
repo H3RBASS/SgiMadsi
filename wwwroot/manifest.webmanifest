@@ -1,0 +1,23 @@
+{
+  "name": "SgiMadsi",
+  "short_name": "SgiMadsi",
+  "description": "Sistema de gestión de inventario y caja",
+  "start_url": "/SgiMadsi/",
+  "scope": "/SgiMadsi/",
+  "display": "fullscreen",
+  "background_color": "#ffffff",
+  "theme_color": "#213458",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "Icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "Icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
