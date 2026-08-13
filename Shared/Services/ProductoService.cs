@@ -32,6 +32,17 @@ namespace SgiMadsi.Shared.Services
             return response.Models;
         }
 
+        public async Task<Producto?> ObtenerProductoPorIdAsync(int id)
+        {
+            var producto = await _client
+            .From<Producto>()
+            .Where(p => p.Id == id)
+            .Get();
+
+            return producto.Models.FirstOrDefault();
+        }
+
+
         public async Task CrearProductoAsync(Producto producto)
         {
             try
