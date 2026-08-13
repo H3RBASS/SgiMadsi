@@ -14,6 +14,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddSingleton<IProductoServices, ProductoService>();
 builder.Services.AddScoped<IProveedoresServices, ProveedoresService>();
+builder.Services.AddScoped<IDetalleVentaServices, DetalleVentaService>();
+builder.Services.AddScoped<IVentaServices, VentaService>();
 
 //conexion a supabase
 

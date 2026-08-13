@@ -16,23 +16,23 @@
                  @bind:event="oninput"
                  @bind:after="@BuscarProductos" 
                  placeholder="Buscar venta..." 
-                 class="w-1/2 border border-gray-500 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                 class="w-full sm:w-1/2 border border-gray-500 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
                 <div class="flex items-center gap-3">
-                    <button class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 
+                    @* <button class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 
                     transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         Exportar
-                    </button>
+                    </button> *@
 
-                    <button class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors
+                    @* <button class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors
                      duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
                         Nuevo Producto
-                    </button>
+                    </button> *@
                 </div>
             </div>
         </header>
@@ -105,7 +105,7 @@
                                         <option value="" disabled selected hidden>Seleccionar</option>
                                         <option value="kg">Kilogramos (kg)</option>
                                         <option value="g">Gramos (g)</option>
-                                        <option value="l">Litros (l)</option>
+                                        <option value="L">Litros (L)</option>
                                         <option value="ml">Mililitros (ml)</option>
                                         <option value="uds">Unidades (uds)</option>
                                     </InputSelect>
