@@ -21,12 +21,14 @@ namespace SgiMadsi.Caja.Pages
         private List<Producto> _productosSeleccionados = new();
         private List<CarritoItem> _carrito = new();
         private List<string> Categorias { get; set; } = new();
+        private List<Venta> Ventas = new();
 
         private Checkout _checkout = new();
 
         private string _busqueda = string.Empty;
 
         private bool MostrarModalVenta;
+        private bool MostrarModalArqueo;
         
         private bool _procesando;
 
@@ -35,11 +37,25 @@ namespace SgiMadsi.Caja.Pages
             _productosOriginales = await ProductoServices.ObtenerProductosAsync();
             _productosOriginales = _productosOriginales.OrderBy(p => p.Subcategoria).ToList();
             _productosFiltrados = _productosOriginales.ToList();
-
+            Ventas = await VentaServices.ObtenerVentasAsync();
             Categorias = _productosOriginales.Select(p => p.Subcategoria)
             .Distinct()
             .ToList(); 
         }
+        private List<Venta> VentasDelDia =>
+            Ventas.Where(v => v.Fecha.Date == DateTime.UtcNow.AddHours(-4).Date).ToList();
+        private decimal TotalVentas =>
+            VentasDelDia.Sum(x => x.Total);
+
+        private decimal TotalQR =>
+            VentasDelDia
+                .Where(x => x.MetodoPago == "QR")
+                .Sum(x => x.Total);
+
+        private decimal TotalEfectivo =>
+            VentasDelDia
+                .Where(x => x.MetodoPago == "Efectivo")
+                .Sum(x => x.Total);
         private void AgregarAlCarrito(Producto productoOriginal)
         {
             var producto = _carrito.FirstOrDefault(p => p.Nombre == productoOriginal.Nombre);
@@ -64,8 +80,6 @@ namespace SgiMadsi.Caja.Pages
         private void CarritoEstado()
         {
             MostrarModalVenta = _carrito?.Any() == true;
-
-            
         }
         private void LimpiarCarrito()   
         {
@@ -120,6 +134,7 @@ namespace SgiMadsi.Caja.Pages
                 }
                 _procesando = false;
             }
+            Ventas = await VentaServices.ObtenerVentasAsync();
             LimpiarCarrito();
             CarritoEstado();
         }

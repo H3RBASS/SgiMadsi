@@ -1,4 +1,4 @@
-const CACHE_NAME = "sgimadsi-v3";
+const CACHE_NAME = "sgimadsi-v3.1";
 
 self.addEventListener("install", event => {
     event.waitUntil(

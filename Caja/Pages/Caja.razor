@@ -1,4 +1,4 @@
-@page "/caja"
+@page "/"
 @layout Navbar
 
 <PageTitle>Caja</PageTitle>
@@ -97,6 +97,33 @@
                         <path d="M3 6h18"/>
                         <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                         </svg>
+                    </button>
+                <!-- Botón Arqueo -->
+                    <button 
+                    @onclick="() => MostrarModalArqueo = true"
+                    class="
+                        group
+                        flex items-center justify-center gap-2
+                        w-full sm:w-auto px-5 py-3
+                        bg-blue-600 text-white text-sm font-medium
+                        rounded-lg shadow-sm hover:shadow-md
+                        transition-all duration-200 ease-in-out
+                        hover:bg-blue-700 hover:scale-105
+                        focus:outline-none
+                        active:scale-95
+                        cursor-pointer
+                    ">
+                        <span class="group-hover:scale-110 transition-transform duration-300">Arqueo</span>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                        class="w-5 h-5 group-hover:rotate-12 transition-transform duration-300 size-6" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke-width="1.5" 
+                        stroke="currentColor" 
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
+                        </svg>
+
                     </button>
 
                     <!-- Botón Venta -->
@@ -318,6 +345,125 @@
                 </div>
             </div>
         }
+        @if (MostrarModalArqueo)
+        {
+            <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+                <div class="w-full max-w-2xl max-h-[90vh] bg-white rounded-xl shadow-xl flex flex-col overflow-hidden">
+
+                    <EditForm Model="_checkout" OnValidSubmit="RegistrarVenta" class="flex flex-col min-h-0">
+                        <DataAnnotationsValidator />
+
+                        <!-- Header -->
+                        <div class="shrink-0 px-5 py-4 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-xl sm:text-2xl font-bold text-gray-800 text-center">
+                                ARQUEO DE CAJA
+                            </h3>
+                        </div>
+
+                        <!-- Productos -->
+                        <div class="flex-1 min-h-0 overflow-y-auto">
+                            <div class="px-3 py-4 sm:px-6">
+                                <div class="w-full rounded-lg border border-gray-200 overflow-hidden">
+                                    <table class="w-full table-fixed border-collapse">
+
+                                        <colgroup>
+                                            <col class="w-[55%]" />
+                                            <col class="w-[20%]" />
+                                            <col class="w-[25%]" />
+                                        </colgroup>
+
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                                    Venta (ID)
+                                                </th>
+                                                <th class="px-2 sm:px-3 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                                    Metodo Pago
+                                                </th>
+                                                <th class="px-2 sm:px-3 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                                    Monto
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody class="divide-y divide-gray-200 bg-white">
+                                            @foreach (var item in VentasDelDia)
+                                            {
+                                                <tr>
+                                                    <td class="px-3 sm:px-4 py-3 align-middle">
+                                                        <div class="text-sm font-medium text-gray-900 wrap-break-word leading-5">
+                                                            @($"{item.Id}")
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="px-2 sm:px-3 py-3 text-center align-middle text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                        @($"{item.MetodoPago}")
+                                                    </td>
+                                                    <td class="px-2 sm:px-3 py-3 text-center align-middle text-sm font-medium text-gray-900">
+                                                        @($"{item.Total:N1} Bs")
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resumen -->
+                        <div class="shrink-0 px-4 py-4 sm:px-6 border-t border-gray-200 bg-gray-50">
+                            <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
+                                <span>Subtotal:</span>
+
+                                <span class="text-base sm:text-lg font-bold text-gray-400 whitespace-nowrap">
+                                    @($"{TotalVentas} Bs.")
+                                </span>
+                            </div>
+
+                            <div class="mt-3 pt-3 border-t border-gray-200 flex items-center justify-between gap-3">
+                                <span class="text-base font-medium text-gray-900">
+                                    Total QR:
+                                </span>
+
+                                <span class="text-base sm:text-lg font-bold text-gray-800 whitespace-nowrap">
+                                    @($"{TotalQR} Bs.")
+                                </span>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-gray-200 flex items-center justify-between gap-3">
+                                <span class="text-base font-medium text-gray-900">
+                                    Total Efectivo:
+                                </span>
+
+                                <span class="text-base sm:text-lg font-bold text-gray-800 whitespace-nowrap">
+                                    @($"{TotalEfectivo} Bs.")
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="shrink-0 px-4 py-4 sm:px-6 border-t border-gray-200 bg-white">
+                            <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-center">
+
+                                <button type="button"
+                                        @onclick="() => MostrarModalArqueo = false"
+                                        class="w-full cursor-pointer sm:w-auto min-h-11 px-5 py-2.5 rounded-lg bg-gray-100 text-gray-700 font-medium inline-flex items-center justify-center gap-2 transition hover:bg-gray-200 active:scale-[0.98]">
+
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+
+                                    <span>Cerrar</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </EditForm>
+                </div>
+            </div>
+        }
 
         <!-- Cuerpo: dos columnas con scroll -->
 
@@ -365,9 +511,9 @@
                         <table class="min-w-full table-fixed w-full h-full">
                             <colgroup>
                                 <col class="w-2/6">
-                                <col class="w-1/6">
-                                <col class="w-1/6">
-                                <col class="w-1/6">
+                                <col class="w-2/6">
+                                <col class="w-2/6">
+                                <col class="w-2/6">
                             </colgroup>
                             <thead class="bg-gray-50 sticky top-0 z-10">
                                 <tr>
