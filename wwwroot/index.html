@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MADSI</title>
+    <!-- [FIX] base href debe coincidir con start_url del manifest -->
     <base href="/" />
     <link rel="stylesheet" href="css/tailwind.css" />
     <link rel="stylesheet" href="css/app.css" />
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
     <!-- PWA -->
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#213458">
@@ -21,7 +21,8 @@
     <!-- Apple -->
     <link rel="apple-touch-icon" href="Icons/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <!-- [FIX] black-translucent para que la barra se mezcle con el theme_color -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Android / navegadores móviles -->
     <meta name="mobile-web-app-capable" content="yes">

@@ -1,9 +1,25 @@
-const CACHE_NAME = "sgimadsi-v3.1";
+const CACHE_NAME = "sgimadsi-v4";
+
+// [FIX] Assets estáticos para precachear (offline real)
+const PRECACHE_ASSETS = [
+    "/SgiMadsi/",
+    "/SgiMadsi/manifest.webmanifest",
+    "/SgiMadsi/offline.html",
+    "/SgiMadsi/css/tailwind.css",
+    "/SgiMadsi/css/app.css",
+    "/SgiMadsi/css/fonts/nunito-regular.woff2",
+    "/SgiMadsi/css/fonts/nunito-semibold.woff2",
+    "/SgiMadsi/css/fonts/nunito-bold.woff2",
+    "/SgiMadsi/Icons/android-chrome-192x192.png",
+    "/SgiMadsi/Icons/android-chrome-512x512.png",
+    "/SgiMadsi/Icons/favicon.ico",
+    "/SgiMadsi/Icons/apple-touch-icon.png"
+];
 
 self.addEventListener("install", event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => cache.add(self.registration.scope))
+            .then(cache => cache.addAll(PRECACHE_ASSETS))
             .then(() => self.skipWaiting())
     );
 });
@@ -41,7 +57,13 @@ self.addEventListener("fetch", event => {
 
                 return fetch(event.request)
                     .then(response => {
+                        // No cachear respuestas no válidas ni de API
                         if (!response || response.status !== 200) {
+                            return response;
+                        }
+
+                        // No cachear peticiones a la API de Supabase
+                        if (url.pathname.includes("/rest/v1/") || url.pathname.includes("/auth/")) {
                             return response;
                         }
 
@@ -53,8 +75,14 @@ self.addEventListener("fetch", event => {
                             });
 
                         return response;
+                    })
+                    .catch(() => {
+                        // [FIX] Si es navegación, mostrar offline.html
+                        if (event.request.mode === "navigate") {
+                            return caches.match("/SgiMadsi/offline.html");
+                        }
+                        return new Response("Offline", { status: 503 });
                     });
             })
-            .catch(() => caches.match(self.registration.scope))
     );
 });

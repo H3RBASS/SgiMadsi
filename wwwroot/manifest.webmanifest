@@ -4,7 +4,7 @@
   "description": "Sistema de gestión de inventario y caja",
   "start_url": "/SgiMadsi/",
   "scope": "/SgiMadsi/",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#213458",
   "orientation": "portrait-primary",
@@ -12,12 +12,14 @@
     {
       "src": "Icons/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "Icons/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
