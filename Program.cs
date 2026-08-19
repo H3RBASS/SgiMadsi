@@ -16,6 +16,7 @@ builder.Services.AddSingleton<IProductoServices, ProductoService>();
 builder.Services.AddScoped<IProveedoresServices, ProveedoresService>();
 builder.Services.AddScoped<IDetalleVentaServices, DetalleVentaService>();
 builder.Services.AddScoped<IVentaServices, VentaService>();
+builder.Services.AddScoped<IDashService, DashService>();
 
 //conexion a supabase
 

@@ -350,7 +350,8 @@
             <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
                 <div class="w-full max-w-2xl max-h-[90vh] bg-white rounded-xl shadow-xl flex flex-col overflow-hidden">
 
-                    <EditForm Model="_checkout" OnValidSubmit="RegistrarVenta" class="flex flex-col min-h-0">
+                    <!-- [FIX #8] Modal Arqueo es solo reporte, no debe ejecutar RegistrarVenta -->
+                    <EditForm Model="_checkout" class="flex flex-col min-h-0">
                         <DataAnnotationsValidator />
 
                         <!-- Header -->

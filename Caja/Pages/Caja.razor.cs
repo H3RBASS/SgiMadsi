@@ -58,7 +58,8 @@ namespace SgiMadsi.Caja.Pages
                 .Sum(x => x.Total);
         private void AgregarAlCarrito(Producto productoOriginal)
         {
-            var producto = _carrito.FirstOrDefault(p => p.Nombre == productoOriginal.Nombre);
+            // [FIX #9] Comparar por ProductoId en vez de Nombre para evitar mezclar productos distintos con mismo nombre
+            var producto = _carrito.FirstOrDefault(p => p.ProductoId == productoOriginal.Id);
             if (producto != null)
             {
                 producto.Cantidad++;
@@ -87,15 +88,14 @@ namespace SgiMadsi.Caja.Pages
         }
         private async Task RegistrarVenta()
         {
-            if  (_procesando)
-            
+            // [FIX #2] Sin {} solo la primera línea era el cuerpo del if, _procesando siempre se ejecutaba
+            if (_procesando)
                 return;
-                _procesando = true ;
-            
-            if(_carrito == null || _carrito.Count == 0)
-            {
+
+            if (_carrito == null || _carrito.Count == 0)
                 return;
-            }
+
+            _procesando = true;
             var venta = new Venta
 
             {
@@ -105,38 +105,48 @@ namespace SgiMadsi.Caja.Pages
                 Descuento = _checkout.Descuento
 
             };
-            var ventaCreada = await VentaServices.CrearVentaAsync(venta);
-
-            if(ventaCreada != null)
+            try
             {
-                foreach(var item in _carrito)
-                {
-                    var detalle = new DetalleVenta
-                        {
-                            VentaId = ventaCreada.Id,
-                            ProductoId = item.ProductoId,
-                            Cantidad = item.Cantidad,
-                            PrecioUnitario = item.PrecioVenta,
-                            Subtotal = item.Cantidad * item.PrecioVenta
-                        };
+                var ventaCreada = await VentaServices.CrearVentaAsync(venta);
 
-                    await DetalleVentaServices.CrearDetalleVentaAsync(detalle);
-                }
-
-                foreach(var item in _carrito)
+                if (ventaCreada != null)
                 {
-                    var producto = await ProductoServices.ObtenerProductoPorIdAsync(item.ProductoId);
-                    if(producto != null)
+                    foreach (var item in _carrito)
                     {
-                        // producto.Stock -= item.Cantidad;
-                        await ProductoServices.EditarProductoAsync(producto);
+                        var detalle = new DetalleVenta
+                            {
+                                VentaId = ventaCreada.Id,
+                                ProductoId = item.ProductoId,
+                                Cantidad = item.Cantidad,
+                                PrecioUnitario = item.PrecioVenta,
+                                Subtotal = item.Cantidad * item.PrecioVenta
+                            };
+
+                        await DetalleVentaServices.CrearDetalleVentaAsync(detalle);
                     }
+
+                    foreach (var item in _carrito)
+                    {
+                        var producto = await ProductoServices.ObtenerProductoPorIdAsync(item.ProductoId);
+                        if (producto != null)
+                        {
+                            // producto.Stock -= item.Cantidad;
+                            await ProductoServices.EditarProductoAsync(producto);
+                        }
+                    }
+
+                    // [FIX #7] Solo limpiar carrito y cerrar modal si la venta fue exitosa
+                    LimpiarCarrito();
+                    MostrarModalVenta = false;
                 }
+
+                Ventas = await VentaServices.ObtenerVentasAsync();
+            }
+            finally
+            {
+                // [FIX #5] Siempre resetear _procesando, incluso si hay excepción
                 _procesando = false;
             }
-            Ventas = await VentaServices.ObtenerVentasAsync();
-            LimpiarCarrito();
-            CarritoEstado();
         }
 
         private void SumarCantidad(CarritoItem item)

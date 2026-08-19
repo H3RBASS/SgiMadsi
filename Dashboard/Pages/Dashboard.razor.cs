@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using SgiMadsi.Shared.Domain;
 using SgiMadsi.Shared.Services;
 using SgiMadsi.Shared.Interfaces;
+using SgiMadsi.Dashboard.Services;
+using SgiMadsi.Dashboard.Models;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace SgiMadsi.Dashboard.Pages;
@@ -17,7 +19,7 @@ public partial class Dashboard
     private IProveedoresServices ProveedorServices { get; set; } = default!;
 
     [Inject]
-    private IVentaServices VentaServices { get; set; } = default!;
+    private IDashService DashService { get; set; } = default!;
 
     //variables
     private bool _procesando;
@@ -28,10 +30,14 @@ public partial class Dashboard
 
     //variable para guardar la imagen temporalmente
     private IBrowserFile? _archivoSeleccionado;
-    private List<Venta> _ventas = new();
 
     //lista donde se guardaran los productos obtenidos del servicio
     private List<Producto> _productos = new();
+
+    // DTO con las ventas del dia ensambladas
+    private List<VentaDelDiaDto> _ventasDelDia = new();
+
+    private HashSet<int> _ventasExpandidas = new();
 
     //objetos vacios para crear productos y despues anadirlos a la BD
     private Producto _nuevoProducto = new();
@@ -41,7 +47,7 @@ public partial class Dashboard
     protected override async Task OnInitializedAsync()
     {
         _productos = await ProductoServices.ObtenerProductosAsync();
-        _ventas = await VentaServices.ObtenerVentasAsync();
+        _ventasDelDia = await DashService.ObtenerVentasDelDiaAsync();
     }
     private List<Producto> ProductosFueraStock =>
         _productos.Where(p => p.Stock == 0).ToList();
@@ -49,13 +55,15 @@ public partial class Dashboard
     private List<Producto> ProductosBajoStock =>
         _productos.Where(p => p.Stock > 0 && p.Stock <= 10).ToList();
 
-    private List<Venta> VentasDelDia =>
-        _ventas.Where(v => v.Fecha.Date == DateTime.UtcNow.AddHours(-4).Date).ToList();
-
-    private static string FormatearFechaBolivia(DateTime fechaUtc)
+    private static string FormatearFechaBolivia(DateTime fechaLocal)
     {
-        return fechaUtc.AddHours(0).ToString("HH:mm");
-        // dd/MM/yyyy
+        return fechaLocal.ToString("HH:mm");
+    }
+
+    private void ToggleVenta(int ventaId)
+    {
+        if (!_ventasExpandidas.Remove(ventaId))
+            _ventasExpandidas.Add(ventaId);
     }
     //variable para controlar la visibilidad del modal
     private bool MostrarModal { get; set; }
@@ -183,6 +191,3 @@ public partial class Dashboard
     }
 
 }   
-    
-
-
