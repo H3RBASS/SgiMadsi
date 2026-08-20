@@ -1,4 +1,4 @@
-const CACHE_NAME = "sgimadsi-v4";
+const CACHE_NAME = "sgimadsi-v4.1";
 
 // [FIX] Assets estáticos para precachear (offline real)
 const PRECACHE_ASSETS = [
