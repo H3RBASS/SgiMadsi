@@ -18,7 +18,6 @@ namespace SgiMadsi.Caja.Pages
         
         private List<Producto> _productosOriginales = new();
         private List<Producto> _productosFiltrados = new();
-        private List<Producto> _productosSeleccionados = new();
         private List<CarritoItem> _carrito = new();
         private List<string> Categorias { get; set; } = new();
         private List<Venta> Ventas = new();
@@ -43,7 +42,7 @@ namespace SgiMadsi.Caja.Pages
             .ToList(); 
         }
         private List<Venta> VentasDelDia =>
-            Ventas.Where(v => v.Fecha.Date == DateTime.UtcNow.AddHours(-4).Date).ToList();
+            Ventas.Where(v => v.Fecha.Date == DateTime.UtcNow).ToList();
         private decimal TotalVentas =>
             VentasDelDia.Sum(x => x.Total);
 
@@ -93,7 +92,9 @@ namespace SgiMadsi.Caja.Pages
                 return;
 
             if (_carrito == null || _carrito.Count == 0)
+            {
                 return;
+            }
 
             _procesando = true;
             var venta = new Venta
@@ -103,7 +104,7 @@ namespace SgiMadsi.Caja.Pages
                 Total = _carrito.Sum(x => x.Cantidad * x.PrecioVenta),
                 MetodoPago = _checkout.MetodoPago,
                 Descuento = _checkout.Descuento
-
+                
             };
             try
             {
@@ -138,6 +139,7 @@ namespace SgiMadsi.Caja.Pages
                     // [FIX #7] Solo limpiar carrito y cerrar modal si la venta fue exitosa
                     LimpiarCarrito();
                     MostrarModalVenta = false;
+                    _checkout.Descuento = 0;
                 }
 
                 Ventas = await VentaServices.ObtenerVentasAsync();
@@ -193,6 +195,11 @@ namespace SgiMadsi.Caja.Pages
         private void EliminarProducto(CarritoItem productoOriginal)
         {
             _carrito.RemoveAll(p => p.Nombre == productoOriginal.Nombre);
+        }
+        
+        private void CancelarVenta()
+        {
+            MostrarModalVenta = false;
         }
         
         private void LimpiarBusqueda()
