@@ -75,6 +75,16 @@ namespace SgiMadsi.Shared.Services
 
             _productosCache.Clear();
         }
+        //metodo provisional eliminar cuando se implementen procedimientos en la BD
+        public async Task<int> ObtenerProductoSPC()
+        {
+            var response = await _client.Rpc<int>(
+                "obtproductosspc",
+                null
+            );
+
+            return response;
+        }
 
     }
 }

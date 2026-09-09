@@ -9,5 +9,6 @@ public interface IProductoServices
     Task CrearProductoAsync(Producto producto);
     Task EditarProductoAsync(Producto producto);
     Task EliminarProductoAsync(int id);
+    Task<int> ObtenerProductoSPC();
 
 }

@@ -42,18 +42,21 @@ public partial class Dashboard
     //objetos vacios para crear productos y despues anadirlos a la BD
     private Producto _nuevoProducto = new();
     private Proveedores _nuevoProveedor = new();
+    private int _ObtProductosSPC;
 
     //metodo que se ejecuta al inicializar el componente
     protected override async Task OnInitializedAsync()
     {
         _productos = await ProductoServices.ObtenerProductosAsync();
         _ventasDelDia = await DashService.ObtenerVentasDelDiaAsync();
+        _ObtProductosSPC = await ProductoServices.ObtenerProductoSPC();
     }
     private List<Producto> ProductosFueraStock =>
         _productos.Where(p => p.Stock == 0).ToList();
 
     private List<Producto> ProductosBajoStock =>
         _productos.Where(p => p.Stock > 0 && p.Stock <= 10).ToList();
+
 
     private static string FormatearFechaBolivia(DateTime fechaLocal)
     {
