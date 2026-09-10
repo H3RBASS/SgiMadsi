@@ -1,5 +1,4 @@
 using SgiMadsi.Shared.Interfaces;
-
 namespace SgiMadsi.Dashboard.Services;
 
 public interface IDashService

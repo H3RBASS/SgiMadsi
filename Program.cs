@@ -6,6 +6,7 @@ using SgiMadsi.Shared.Services;
 using SgiMadsi.Shared.Configuration;
 using Supabase;
 using SgiMadsi.Shared.Interfaces;
+using SgiMadsi.Ventas.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddScoped<IProveedoresServices, ProveedoresService>();
 builder.Services.AddScoped<IDetalleVentaServices, DetalleVentaService>();
 builder.Services.AddScoped<IVentaServices, VentaService>();
 builder.Services.AddScoped<IDashService, DashService>();
+builder.Services.AddScoped<IVentasService, VentasService>();
 
 //conexion a supabase
 
