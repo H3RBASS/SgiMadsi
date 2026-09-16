@@ -4,7 +4,7 @@
 <PageTitle>Caja</PageTitle>
 
 <div class="min-h-screen w-full bg-gray-50 text-gray-800">
-    <main class="flex-1 p-4 lg:p-6">
+    <main class="flex-1 p-2 lg:p-6">
         @* Alerta Venta *@
         @* <div class="flex flex-col absolute top-30 right-25 sm:right-4 lg:right-18 lg:top-4/5 gap-2 w-46 text-xs z-50">
         <div class="succsess-alert cursor-default flex items-center justify-between w-full sm:w-55 h-12 sm:h-14 rounded-lg bg-gray-800 px-2.5">
@@ -49,7 +49,7 @@
         </div> *@
 
         <!-- Encabezado: Buscador + Botón -->
-        <div class="bg-white rounded-xl shadow-sm px-4 py-6 sm:px-6 lg:p-4 mb-6">
+        <div class="bg-white rounded-xl shadow-sm px-2 py-6 sm:px-6 lg:p-4 mb-4">
             <div class="flex flex-col md:flex-row gap-4 items-center">
                 <header>
                     <h1 class="text-xl lg:text-2xl font-bold text-gray-800">Caja</h1>
@@ -99,7 +99,7 @@
                         </svg>
                     </button>
                 <!-- Botón Arqueo -->
-                    <button 
+                    @* <button 
                     @onclick="() => MostrarModalArqueo = true"
                     class="
                         group
@@ -124,7 +124,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
                         </svg>
 
-                    </button>
+                    </button> *@
 
                     <!-- Botón Venta -->
                     <button 
@@ -469,10 +469,10 @@
         <!-- Cuerpo: dos columnas con scroll -->
 
         <div class="flex flex-col h-full">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 h-full">
         
         <!-- Columna izquierda: Categorías -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden h-80 sm:h-[calc(100vh-150px)]">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden h-65 sm:h-[calc(100vh-150px)]">
             <div class="bg-gray-800 px-4 py-2 font-medium border-b flex-none">
                 <h1 class="text-md text-center lg:text-xl font-bold text-white">Productos</h1>
             </div>
@@ -485,13 +485,12 @@
                         <button
 
                             @onclick="() => AgregarAlCarrito(producto)"
-                            class="flex justify-between items-center  w-full py-3 px-2 cursor-pointer 
+                            class="flex justify-between items-center w-full py-3 px-2 cursor-pointer 
                             border border-gray-300 text-gray-800 
-                            transition-colors duration-150 focus:outline-none rounded-lg">
-                            <h3 class="w-full text-md px-2">@($"{producto.Subcategoria} {producto.Nombre} - {producto.Presentacion + producto.Unidad}")</h3>
-                            <div class="flex justify-between w-14 px-2">
-                                <h3>@($"{producto.PrecioVenta}")</h3>
-                                <h3>@($" Bs.")</h3>
+                            transition-colors duration-200 active:bg-gray-300 transform active:scale-95 focus:outline-none rounded-lg">
+                            <h3 class="w-full text-sm px-2 border-r border-gray-300">@($"{producto.Subcategoria} {producto.Nombre} - {producto.Presentacion + producto.Unidad}")</h3>
+                            <div class="flex justify-center w-16 px-1 text-sm font-medium bg-gray-800 text-white rounded-md m-2">
+                                <h3>@($"{producto.PrecioVenta} Bs")</h3>
                             </div>
                         </button>
                     }
@@ -504,7 +503,7 @@
         </div>
 
         <!-- Columna derecha: Venta Actual -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-80 sm:h-[calc(100vh-150px)]">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-65 sm:h-[calc(100vh-150px)]">
                     <div class="bg-gray-800 px-4 py-2 font-medium border-b flex-none">
                         <h1 class="text-md text-center lg:text-xl font-bold text-white">Venta Actual</h1>
                     </div>
@@ -512,44 +511,44 @@
                         <table class="min-w-full table-fixed w-full h-full">
                             <colgroup>
                                 <col class="w-2/6">
-                                <col class="w-2/6">
-                                <col class="w-2/6">
-                                <col class="w-2/6">
+                                <col class="w-1/5">
+                                <col class="w-1/5">
+                                <col class="w-1/5">
                             </colgroup>
                             <thead class="bg-gray-50 sticky top-0 z-10">
                                 <tr>
-                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
-                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
-                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
-                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acción</th>
+                                    <th scope="col" class="py-3 text-center text-xs font-normal text-gray-500 uppercase tracking-wider">Producto</th>
+                                    <th scope="col" class="py-3 text-center text-xs font-normal text-gray-500 uppercase">Cantidad</th>
+                                    <th scope="col" class="py-3 text-center text-xs font-normal text-gray-500 uppercase">Monto</th>
+                                    <th scope="col" class="py-3 text-center text-xs font-normal text-gray-500 uppercase">Accion</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-300">
+                            <tbody class="bg-white divide-y divide-gray-300 table-fixed">
                                 @foreach (var item in _carrito)
                                 {
                                     <tr class="align-top">
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center gap-2">
-                                                <span class="text-sm font-medium text-gray-900 truncate max-w-50">
-                                                    @($"{item.Subcategoria} {item.Nombre}")
+                                        <td class="px-2 py-2 text-center align-middle ">
+                                            <div class="flex items-center">
+                                                <span class="text-sm font-medium text-gray-900 wrap-break-word line-clamp-2 w-30">
+                                                    @($"{item.Nombre}")
                                                 </span>
                                             </div>
                                         </td>
                                         @* cantidad *@
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <td class="px-2 py-2 whitespace-nowrap text-center align-middle">
                                             <div class="flex items-center justify-center">
-                                                <button @onclick="() => RestarCantidad(item)" class="px-2 mx-1 text-gray-800 rounded-full hover:bg-gray-700 hover:text-white transition-colors cursor-pointer text-lg">-</button>
+                                                @* <button @onclick="() => RestarCantidad(item)" class="px-2 mx-1 text-gray-800 rounded-full hover:bg-gray-700 hover:text-white transition-colors cursor-pointer text-lg">-</button> *@
                                                 <span class="inline-flex items-center justify-center px-3 py-1 bg-gray-800 text-white text-sm font-medium rounded-full min-w-10">
                                                     @item.Cantidad
                                                 </span>
-                                                <button @onclick="() => SumarCantidad(item)" class="px-2 mx-1 text-gray-800 rounded-full hover:bg-gray-700 hover:text-white transition-colors cursor-pointer text-lg">+</button>
+                                                @* <button @onclick="() => SumarCantidad(item)" class="px-2 mx-1 text-gray-800 rounded-full hover:bg-gray-700 hover:text-white transition-colors cursor-pointer text-lg">+</button> *@
                                             </div>
                                         </td>
                                         @* subtotal *@
-                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
-                                            @($"{item.Cantidad * item.PrecioVenta} Bs.")
+                                        <td class="px-6 py-4 whitespace-nowrap text-center align-middle text-sm font-medium text-gray-900">
+                                            @($"{item.Cantidad * item.PrecioVenta} Bs")
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <td class="px-6 py-4 whitespace-nowrap text-center align-middle">
                                             <button @onclick="() => EliminarProducto(item)"
                                                     class="group text-red-600 transition-colors duration-200 cursor-pointer
                                                     ease-in-out
@@ -575,7 +574,7 @@
                                     </tr>
                                 }
                             </tbody>
-                            <tfoot class="bg-gray-50 sticky bottom-0 z-10">
+                            @* <tfoot class="bg-gray-50 sticky bottom-0 z-10">
                                 <tr>
                                     <td colspan="1" class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
                                         Total:
@@ -586,7 +585,7 @@
                                     </td>
                                     <td colspan="1"></td>
                                 </tr>
-                            </tfoot>
+                            </tfoot> *@
                         </table>
                     </div>
                 </div>
