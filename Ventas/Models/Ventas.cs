@@ -1,7 +1,7 @@
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
-public class VentasTabla:BaseModel
+public class VentasTablaBo:BaseModel
 {
     [PrimaryKey("id_venta", false)]
     public int Id { get; set; }

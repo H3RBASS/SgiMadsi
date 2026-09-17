@@ -4,7 +4,7 @@ using static Supabase.Postgrest.Constants;
 
 public interface IVentasService
 {
-    Task<List<VentasTabla>> ObtenerVentas(DateTime fecha);
+    Task<List<VentasTablaBo>> ObtenerVentas(DateTime fecha);
 }
 
 public class VentasService : IVentasService
@@ -16,14 +16,14 @@ public class VentasService : IVentasService
         _client = client;
     }
 
-    public async Task<List<VentasTabla>> ObtenerVentas(DateTime fecha)
+    public async Task<List<VentasTablaBo>> ObtenerVentas(DateTime fecha)
     {
         DateTime inicio = fecha.Date;
         DateTime fin = inicio.AddDays(1);
         var response = await _client
-            .From<VentasTabla>()
-            .Filter("fecha", Operator.GreaterThanOrEqual, inicio.ToString("O"))
-            .Filter("fecha", Operator.LessThan, fin.ToString("O"))
+            .From<VentasTablaBo>()
+            .Filter("fecha", Operator.GreaterThanOrEqual, inicio.ToString("yyyy-MM-ddTHH:mm:ss"))
+            .Filter("fecha", Operator.LessThan, fin.ToString("yyyy-MM-ddTHH:mm:ss"))
             .Get();
 
         return response.Models;

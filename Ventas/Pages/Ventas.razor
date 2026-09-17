@@ -58,7 +58,7 @@
                         }
                         else
                         {
-                            @foreach (var venta in VentasList)
+                            @foreach (var venta in VentasList.OrderBy(x => x.Id))
                             {
                                 <tr>
                                     <td class="py-3 px-4 text-left font-medium text-gray-700">@venta.Id</td>
