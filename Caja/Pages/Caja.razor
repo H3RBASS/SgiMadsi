@@ -480,7 +480,7 @@
             <!-- Grid de categorías responsivo y scrolleable -->
             <div class="flex-1 overflow-y-auto min-h-0 p-1">
                 <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 gap-1 auto-rows-min">
-                    @foreach (var producto in _productosFiltrados.OrderBy(p => p.Nombre))
+                    @foreach (var producto in _productosFiltrados.OrderBy(p => p.PrecioVenta))
                     {
                         <button
 
