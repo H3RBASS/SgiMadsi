@@ -8,7 +8,7 @@ public partial class Ventas : ComponentBase
     [Inject]
     private IVentasService VentasService { get; set; } = default!;
 
-    private List<VentasTabla> VentasList { get; set; } = new();
+    private List<VentasTablaBo> VentasList { get; set; } = new();
 
     private DateTime FechaSeleccionada { get; set; } = DateTime.Today;
 
