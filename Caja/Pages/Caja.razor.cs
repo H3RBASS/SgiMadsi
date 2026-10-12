@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text;
 using Microsoft.AspNetCore.Components;
 using SgiMadsi.Caja.Models;
 using SgiMadsi.Shared.Domain;
@@ -18,6 +20,7 @@ namespace SgiMadsi.Caja.Pages
         
         private List<Producto> _productosOriginales = new();
         private List<Producto> _productosFiltrados = new();
+        private List<string[]> _productosTokens = new();
         private List<CarritoItem> _carrito = new();
         private List<string> Categorias { get; set; } = new();
         private List<Venta> Ventas = new();
@@ -36,6 +39,9 @@ namespace SgiMadsi.Caja.Pages
             _productosOriginales = await ProductoServices.ObtenerProductosAsync();
             _productosOriginales = _productosOriginales.OrderBy(p => p.Subcategoria).ToList();
             _productosFiltrados = _productosOriginales.ToList();
+            _productosTokens = _productosOriginales
+                .Select(p => Tokenizar(NormalizarTexto($"{p.Subcategoria} {p.Nombre}")))
+                .ToList();
             Ventas = await VentaServices.ObtenerVentasAsync();
             Categorias = _productosOriginales.Select(p => p.Subcategoria)
             .Distinct()
@@ -181,22 +187,57 @@ namespace SgiMadsi.Caja.Pages
                 _productosFiltrados = _productosOriginales.ToList();
                 return;
             }
-            //Separamos la cadena en palabras y buscamos cada palabra en el nombre y la subcategoria del producto
-            var palabrasBusqueda = busqueda.Split(' ',
-                StringSplitOptions.RemoveEmptyEntries);
 
-                _productosFiltrados = _productosOriginales
-                .Where(p =>
+            // Si la consulta termina en espacio, la última palabra se trata como palabra completa
+            var terminaEnEspacio = _busqueda.Length > 0 && char.IsWhiteSpace(_busqueda[_busqueda.Length - 1]);
+
+            var palabrasBusqueda = Tokenizar(NormalizarTexto(busqueda));
+            if (palabrasBusqueda.Length == 0)
+            {
+                _productosFiltrados = _productosOriginales.ToList();
+                return;
+            }
+
+            // Todas las palabras salvo la última deben coincidir como palabra completa (AND)
+            var ultimaPalabra = palabrasBusqueda[^1];
+            var palabrasCompletas = terminaEnEspacio
+                ? palabrasBusqueda
+                : palabrasBusqueda.Take(palabrasBusqueda.Length - 1).ToArray();
+
+            _productosFiltrados = _productosOriginales
+                .Where((p, i) =>
                 {
-                    var textoBusqueda =
-                        $"{p.Subcategoria} {p.Nombre}";
-                        
-                    return palabrasBusqueda.Any(palabra =>
-                        textoBusqueda.Contains(
-                        palabra,
-                        StringComparison.OrdinalIgnoreCase));
+                    var tokens = _productosTokens[i];
+
+                    if (!palabrasCompletas.All(w => tokens.Contains(w)))
+                    {
+                        return false;
+                    }
+
+                    // Sin espacio final, la última palabra puede ser prefijo de una palabra del producto
+                    return terminaEnEspacio || tokens.Any(t => t.StartsWith(ultimaPalabra));
                 })
                 .ToList();
+        }
+
+        private static string NormalizarTexto(string texto)
+        {
+            var formD = texto.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder(formD.Length);
+            foreach (var c in formD)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC).ToLowerInvariant();
+        }
+
+        private static string[] Tokenizar(string texto)
+        {
+            var sinPuntuacion = new string(texto.Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray());
+            return sinPuntuacion.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         }
 
         private void EliminarProducto(CarritoItem productoOriginal)
