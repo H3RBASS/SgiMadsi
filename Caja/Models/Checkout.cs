@@ -8,4 +8,5 @@ public class Checkout
     public string MetodoPago { get; set; } = string.Empty;
     [Range(0, double.MaxValue, ErrorMessage = "El descuento no puede ser negativo.")]
     public decimal Descuento { get; set; } = 0;
+    public DateTime? FechaVenta { get; set; }
 }

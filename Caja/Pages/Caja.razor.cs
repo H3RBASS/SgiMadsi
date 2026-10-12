@@ -97,10 +97,16 @@ namespace SgiMadsi.Caja.Pages
             }
 
             _procesando = true;
+
+            var ahoraUtc = DateTime.UtcNow;
+            var fechaVenta = _checkout.FechaVenta.HasValue
+                ? DateTime.SpecifyKind(_checkout.FechaVenta.Value.Date, DateTimeKind.Utc).Add(ahoraUtc.TimeOfDay)
+                : ahoraUtc;
+
             var venta = new Venta
 
             {
-                Fecha = DateTime.UtcNow,
+                Fecha = fechaVenta,
                 Total = _carrito.Sum(x => x.Cantidad * x.PrecioVenta),
                 MetodoPago = _checkout.MetodoPago,
                 Descuento = _checkout.Descuento
@@ -140,6 +146,7 @@ namespace SgiMadsi.Caja.Pages
                     LimpiarCarrito();
                     MostrarModalVenta = false;
                     _checkout.Descuento = 0;
+                    _checkout.FechaVenta = null;
                 }
 
                 Ventas = await VentaServices.ObtenerVentasAsync();
