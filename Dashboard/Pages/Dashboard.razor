@@ -495,85 +495,32 @@
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                         <!-- Sale of Day -->
             <article class="bg-white rounded-xl shadow-lg p-4 lg:p-6 xl:col-span-1 h-80 sm:h-auto">
-                <div class="flex justify-between items-start mb-4">
+                @* <div class="flex justify-between items-start mb-4">
                     <div class="min-w-0">
                         <p class="text-gray-500 text-sm truncate">Ventas del dia</p>
                         <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mt-2 truncate">@_ventasDelDia.Count</h2>
                     </div>
-                </div>
+                </div> *@
 
-                <div class="flex-1 overflow-y-auto max-h-72">
-                    <table class="w-full table-auto">
-                        <thead class="sticky top-0 bg-white z-10 shadow-sm">
-                            <tr class="border-b border-gray-200">
-                                <th class="text-left py-3 text-gray-500 font-medium text-sm">Hora</th>
-                                <th class="text-left py-3 text-gray-500 font-medium text-sm">Pago</th>
-                                <th class="text-left py-3 text-gray-500 font-medium text-sm">Items</th>
-                                <th class="text-left py-3 text-gray-500 font-medium text-sm">Monto</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            @if (_ventasDelDia.Any())
+                <div class="flex-1 overflow-y-auto max-h-auto">
+
+                    <div>
+                        <div class="grid grid-cols-1 md:grid-cols-7 gap-2 justify-items-center text-sm">
+                            <div class="text-gray-700 text-center rounded-md">Lun</div>
+                            <div class="text-gray-700 text-center rounded-md">Mar</div>
+                            <div class="text-gray-700 text-center rounded-md">Mie</div>
+                            <div class="text-gray-700 text-center rounded-md">Jue</div>
+                            <div class="text-gray-700 text-center rounded-md">Vie</div>
+                            <div class="text-gray-700 text-center rounded-md">Sab</div>
+                            <div class="text-gray-700 text-center rounded-md">Dom</div>
+                            @for (int i = 1; i <= 31; i++)
                             {
-                                @foreach (var venta in _ventasDelDia)
-                                {
-                                    var expandida = _ventasExpandidas.Contains(venta.VentaId);
-                                    <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
-                                        @onclick="() => ToggleVenta(venta.VentaId)">
-                                        <td class="py-3">
-                                            <span class="text-sm whitespace-nowrap">@FormatearFechaBolivia(venta.Fecha)</span>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="text-sm whitespace-nowrap">@venta.MetodoPago</span>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="text-sm whitespace-nowrap">@venta.CantidadItems uds</span>
-                                        </td>
-                                        <td class="py-3 font-bold text-sm">@venta.Total.ToString("N2") Bs</td>
-                                        <td class="py-3 text-right">
-                                            <span class="text-xs text-gray-400">@(expandida ? "▲" : "▼")</span>
-                                        </td>
-                                    </tr>
-                                    @if (expandida && venta.Productos.Any())
-                                    {
-                                        <tr class="bg-gray-50">
-                                            <td colspan="5" class="px-4 py-2">
-                                                <table class="w-full text-sm">
-                                                    <thead>
-                                                        <tr class="text-gray-500 text-xs">
-                                                            <th class="text-left py-1 font-medium">Producto</th>
-                                                            <th class="text-center py-1 font-medium">Cant.</th>
-                                                            <th class="text-right py-1 font-medium">P. Unit.</th>
-                                                            <th class="text-right py-1 font-medium">Subtotal</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (var p in venta.Productos)
-                                                        {
-                                                            <tr class="text-gray-700">
-                                                                <td class="py-1">@p.Nombre</td>
-                                                                <td class="py-1 text-center">@p.Cantidad</td>
-                                                                <td class="py-1 text-right">@p.PrecioUnitario.ToString("N2")</td>
-                                                                <td class="py-1 text-right font-medium">@p.Subtotal.ToString("N2") Bs</td>
-                                                            </tr>
-                                                        }
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
+                                <div class="bg-blue-500 grid text-white size-14 place-items-center rounded-md">@i
+                                <span class="text-[10px] leading-none">+1120</span>
+                                </div>
                             }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="5" class="py-6 text-center text-gray-500">
-                                        No hay ventas disponibles.
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
                 </div>
             </article>
 

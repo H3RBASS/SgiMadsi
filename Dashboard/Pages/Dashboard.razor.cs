@@ -20,6 +20,9 @@ public partial class Dashboard
 
     [Inject]
     private IDashService DashService { get; set; } = default!;
+    
+    // [Inject]
+    // private IVenta 
 
     //variables
     private bool _procesando;
